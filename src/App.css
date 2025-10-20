@@ -1,0 +1,66 @@
+@import "tailwindcss";
+@theme {
+  /* Primary = Verde */
+  --color-primary: #89c64b;
+  --color-primary-light: #a6d56f;
+  --color-primary-dark: #6fa53c;
+
+  /* Secondary = Giallo */
+  --color-secondary: #febc11;
+  --color-secondary-light: #ffd45c;
+  --color-secondary-dark: #e5a800;
+
+  /* Font Family */
+  --font-family-sans: 'Sora', ui-sans-serif, system-ui, sans-serif;
+  --default-font-family: 'Sora', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Applica Sora a tutto il body */
+body {
+  font-family: 'Sora', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Applica Sora a tutti gli elementi di testo */
+*, *::before, *::after {
+  font-family: 'Sora', ui-sans-serif, system-ui, sans-serif;
+}
+
+.container {
+  @apply max-w-[1500px] mx-auto;
+}
+
+.animation-smooth {
+  @apply transition duration-200 ease-in-out;
+}
+
+.btn {
+  @apply focus:ring-4 focus:outline-none font-medium px-3 md:px-5 py-2.5 text-center md:min-w-[100px] cursor-pointer;
+}
+.btn-small {
+  @apply rounded-sm px-4 py-2 text-base;
+}
+.btn-big {
+  @apply rounded-full px-8 py-4 text-lg;
+}
+
+.btn-primary {
+  @apply hover:bg-black bg-primary text-white transition-all duration-[400ms] ease-in-out;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-white hover:bg-black hover:text-white transition-all duration-[400ms] ease-in-out;
+}
+
+.btn-white {
+  @apply bg-white text-black hover:bg-black hover:text-white transition-all duration-[400ms] ease-in-out;
+}
+
+/* Personalizzazione globale della scrollbar */
+* {
+  @apply [&::-webkit-scrollbar]:w-1 md:[&::-webkit-scrollbar]:w-2
+    [&::-webkit-scrollbar-track]:rounded-full
+    [&::-webkit-scrollbar-track]:bg-gray-100
+    [&::-webkit-scrollbar-thumb]:rounded-full
+    [&::-webkit-scrollbar-thumb]:bg-gray-300
+    [&::-webkit-scrollbar:horizontal]:h-2 md:[&::-webkit-scrollbar:horizontal]:h-2;
+}

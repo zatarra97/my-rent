@@ -1,0 +1,71 @@
+# Dependencies
+**/node_modules/
+**/.pnp/
+**/.pnp.js
+**/jspm_packages/ # Added: JSPM dependency directory
+**/typings/ # Added: TypeScript v1 declaration files
+
+# Production Build and Output
+**/dist/
+**/dist-ssr/
+**/build/
+**/bin/
+**/*.tgz
+**/lib-cov/ # Added: Directory for instrumented libs (e.g., jscoverage/JSCover)
+**/build/Release/ # Added: Compiled binary addons
+
+# Configuration and Sensitive Data
+**/.env
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+**/*.local
+**/.npmrc
+
+# Cache and Temporary Files
+**/.npm/
+**/.eslintcache
+**/.node_repl_history
+**/.yarn-integrity
+**/*.tsbuildinfo
+**/*.sw?
+**/.grunt/ # Added: Grunt intermediate storage
+**/.lock-wscript # Added: node-waf configuration file
+
+# Logging
+**/logs/
+**/*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+**/lerna-debug.log*
+
+# Runtime Data
+**/pids/ # Added: Directory for process IDs
+**/*.pid # Added: Process ID files
+**/*.seed # Added: Seed files
+**/*.pid.lock # Added: Process ID lock files
+
+# Testing
+**/coverage/
+**/.nyc_output/ # Added: nyc test coverage directory
+
+# IDE and Development Tools
+**/.vscode/
+!**/.vscode/settings.json
+!**/.vscode/tasks.json
+!**/.vscode/launch.json
+!**/.vscode/extensions.json
+**/.idea/
+**/*.suo
+**/*.ntvs*
+**/*.njsproj
+**/*.sln
+**/.pulumi/
+**/#*# # Added: Emacs auto-save files
+
+# Operating System
+**/.DS_Store
+**/Thumbs.db

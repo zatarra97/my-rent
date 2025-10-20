@@ -1,0 +1,291 @@
+# CursorRules per StarterKit Frontend - showcase-webapp
+
+## 🎯 **CONTESTO PRINCIPALE**
+
+Questo è uno **StarterKit Frontend** progettato per essere il punto di partenza per progetti enterprise. È strutturato come un'applicazione React moderna con architettura scalabile e best practices consolidate.
+
+### **Caratteristiche Principali:**
+
+- **Architettura Enterprise**: Pattern consolidati per applicazioni aziendali
+- **StarterKit**: Template riutilizzabile per nuovi progetti
+- **Full-Stack Ready**: Integrazione completa con backend e servizi cloud
+- **Production Grade**: Qualità enterprise con gestione errori e performance
+
+## 🏗️ **ARCHITETTURA E STRUTTURA**
+
+### **Pattern Architetturali:**
+
+- **Feature-Based Organization**: Ogni entità ha la sua cartella con struttura standardizzata
+- **Component Composition**: Componenti riutilizzabili e composabili
+- **Service Layer**: Separazione chiara tra UI e logica di business
+- **Type Safety**: TypeScript completo con tipi derivati da schemi Zod
+
+### **Struttura Standard Entità:**
+
+```
+src/Pages/Entità/
+├── Entità.tsx              # Lista con Table + Filters + Actions
+├── EntitàDetail.tsx        # CRUD con form validato + tabs
+├── entitàSchema.ts         # Schema Zod + tipi TypeScript
+└── tabs/                   # Tab specializzate (se necessarie)
+    ├── _general.tsx        # Tab principale
+    ├── _metrics.tsx        # Dati/metriche
+    └── _relations.tsx      # Relazioni con altre entità
+```
+
+## 🛠️ **TECNOLOGIE E STRUMENTI**
+
+### **Core Stack:**
+
+- **React 18+**: Con hooks moderni e patterns funzionali
+- **TypeScript 5.8+**: Tipizzazione completa e type inference
+- **Vite 6+**: Build tool moderno e veloce
+- **Tailwind CSS 4**: Utility-first CSS con design system
+
+### **Gestione Form e Validazione:**
+
+- **React Hook Form**: Gestione form performante
+- **Zod**: Validazione schema-first con tipi derivati automaticamente
+- **@hookform/resolvers**: Integrazione Zod + React Hook Form
+
+### **Routing e Navigazione:**
+
+- **React Router 7**: Routing moderno con lazy loading
+- **Sidebar Navigation**: Menu laterale espandibile con localStorage persistence
+
+### **Autenticazione e Sicurezza:**
+
+- **Amazon Cognito**: Gestione utenti e autorizzazione
+- **JWT Tokens**: Autenticazione stateless con refresh automatico
+- **Role-Based Access Control**: Controllo accessi basato su gruppi Cognito
+
+### **Gestione Dati:**
+
+- **Axios**: HTTP client con interceptors per autenticazione
+- **API Utility Layer**: Servizi standardizzati per CRUD operations
+- **Error Handling**: Gestione centralizzata errori con rollback automatico
+
+### **UI/UX Components:**
+
+- **Flowbite React**: Componenti UI enterprise-ready
+- **FontAwesome**: Icone vettoriali scalabili
+- **React Toastify**: Notifiche toast per feedback utente
+- **Custom Components**: Sistema di componenti personalizzati e riutilizzabili
+
+## 📋 **CONVENZIONI E STANDARD**
+
+### **Naming Conventions:**
+
+- **File**: PascalCase per componenti, camelCase per utility
+- **Componenti**: PascalCase con suffisso descrittivo (es. `UserDetail.tsx`)
+- **Funzioni**: camelCase con verbo descrittivo (es. `handleUserDelete`)
+- **Costanti**: UPPER_SNAKE_CASE (es. `LOCAL_STORAGE_KEYS`)
+- **Interfacce**: PascalCase con prefisso `I` o suffisso descrittivo
+
+### **Struttura Componenti:**
+
+```typescript
+// 1. Imports (esterni, interni, tipi)
+// 2. Interfacce e tipi
+// 3. Componente principale
+// 4. Hooks e logica
+// 5. Handlers e funzioni
+// 6. Render e JSX
+// 7. Export
+```
+
+### **Gestione Stato:**
+
+- **useState**: Per stato locale semplice
+- **useEffect**: Per side effects e lifecycle
+- **Context**: Per stato globale condiviso (se necessario)
+- **LocalStorage**: Per persistenza preferenze utente
+
+## 🔧 **BEST PRACTICES IMPLEMENTATE**
+
+### **Form Management:**
+
+- **Schema-First Validation**: Zod schemas come fonte di verità
+- **Type Safety**: Tipi TypeScript derivati automaticamente dagli schemi
+- **Error Handling**: Gestione errori di validazione con messaggi in italiano
+- **Performance**: React Hook Form per re-render ottimizzati
+
+### **API Integration:**
+
+- **Standardized Endpoints**: Pattern consistente per tutte le entità
+- **Error Boundaries**: Gestione errori con fallback UI
+- **Loading States**: Stati di caricamento per UX migliore
+- **Retry Logic**: Tentativi automatici per operazioni fallite
+
+### **Component Design:**
+
+- **Composition over Inheritance**: Componenti composabili
+- **Props Interface**: Tipi TypeScript per tutte le props
+- **Default Props**: Valori di default sensati
+- **Accessibility**: ARIA labels e semantic HTML
+
+## 📱 **RESPONSIVE DESIGN**
+
+### **Breakpoints Tailwind:**
+
+- **Mobile First**: Design mobile-first con progressive enhancement
+- **Grid System**: CSS Grid e Flexbox per layout responsive
+- **Typography**: Scala tipografica responsive
+- **Spacing**: Sistema di spacing consistente con Tailwind
+
+## 🚀 **PERFORMANCE E OPTIMIZATION**
+
+### **Code Splitting:**
+
+- **Route-Based**: Lazy loading per pagine
+- **Component-Based**: React.lazy per componenti pesanti
+- **Bundle Analysis**: Monitoraggio dimensioni bundle
+
+### **React Optimization:**
+
+- **React.memo**: Per componenti che si aggiornano raramente
+- **useCallback/useMemo**: Per funzioni e valori costosi
+- **Virtual Scrolling**: Per liste lunghe (se necessario)
+
+## 🔒 **SICUREZZA E VALIDAZIONE**
+
+### **Input Validation:**
+
+- **Client-Side**: Zod schemas per validazione immediata
+- **Server-Side**: Validazione backend per sicurezza
+- **XSS Prevention**: Sanitizzazione input utente
+- **CSRF Protection**: Token di sicurezza per operazioni critiche
+
+### **Authentication Flow:**
+
+- **Token Refresh**: Refresh automatico JWT tokens
+- **Session Management**: Gestione sessioni con timeout
+- **Role Verification**: Controllo ruoli per operazioni sensibili
+
+## 📊 **MONITORING E DEBUGGING**
+
+### **Error Tracking:**
+
+- **Rollbar**: Error tracking e monitoring
+- **Console Logging**: Log strutturati per debugging
+- **Error Boundaries**: Fallback UI per errori React
+
+### **Development Tools:**
+
+- **ESLint**: Linting con regole personalizzate
+- **TypeScript**: Compile-time error checking
+- **React DevTools**: Debugging componenti React
+
+## 🌐 **INTERNAZIONALIZZAZIONE**
+
+### **Localization:**
+
+- **Italian First**: Interfaccia primaria in italiano
+- **Date Formatting**: Formattazione date locale italiana
+- **Number Formatting**: Formattazione numeri con separatori italiani
+- **Currency**: Euro come valuta di default
+
+## 📁 **STRUTTURA FILE E ORGANIZZAZIONE**
+
+### **Directory Structure:**
+
+```
+src/
+├── Components/          # Componenti riutilizzabili
+├── Pages/              # Pagine dell'applicazione
+├── services/           # Servizi API e business logic
+├── hooks/              # Custom React hooks
+├── constants/          # Costanti e configurazioni
+├── types/              # Tipi TypeScript globali
+├── assets/             # Risorse statiche
+└── utils/              # Utility functions
+```
+
+### **File Naming:**
+
+- **Index Files**: `index.ts` per export aggregati
+- **Type Files**: `.d.ts` per dichiarazioni globali
+- **Schema Files**: `*Schema.ts` per schemi Zod
+- **Component Files**: PascalCase per componenti React
+
+## 🎨 **DESIGN SYSTEM**
+
+### **Component Library:**
+
+- **Consistent Styling**: Design tokens e variabili CSS
+- **Theme Support**: Supporto per temi chiari/scuri
+- **Accessibility**: WCAG compliance e semantic HTML
+- **Icon System**: FontAwesome con fallback
+
+### **Color Palette:**
+
+- **Primary Colors**: Blu aziendale per elementi principali
+- **Semantic Colors**: Verde (successo), rosso (errore), giallo (warning)
+- **Neutral Colors**: Grigi per testo e bordi
+- **Accent Colors**: Colori per highlights e call-to-action
+
+## 📈 **SCALABILITÀ E MANUTENIBILITÀ**
+
+### **Code Organization:**
+
+- **Feature Modules**: Organizzazione per funzionalità
+- **Shared Components**: Componenti condivisi tra moduli
+- **Utility Functions**: Funzioni helper riutilizzabili
+- **Type Definitions**: Tipi centralizzati e riutilizzabili
+
+### **Testing Strategy:**
+
+- **Unit Tests**: Test per componenti e utility
+- **Integration Tests**: Test per flussi utente
+- **E2E Tests**: Test end-to-end per scenari critici
+
+## 🔄 **WORKFLOW E DEPLOYMENT**
+
+### **Development Workflow:**
+
+- **Git Flow**: Branch strategy per feature e release
+- **Code Review**: Pull request con review obbligatoria
+- **Automated Testing**: CI/CD pipeline con test automatici
+- **Version Management**: Semantic versioning con script automatizzati
+
+### **Deployment:**
+
+- **Environment Config**: Configurazioni per dev/staging/prod
+- **Build Optimization**: Bundle splitting e code minification
+- **CDN Integration**: Distribuzione asset statici
+- **Monitoring**: Performance monitoring e error tracking
+
+## 💡 **GUIDELINES PER NUOVI PROGETTI**
+
+### **Quando Usare Questo StarterKit:**
+
+- **Applicazioni Enterprise**: Dashboard, CRM, sistemi gestionali
+- **CRUD Applications**: Gestione entità con operazioni standard
+- **Admin Panels**: Interfacce amministrative e di controllo
+- **Data Visualization**: Applicazioni con tabelle e grafici
+
+### **Personalizzazione:**
+
+- **Brand Identity**: Colori e logo aziendali
+- **Feature Flags**: Attivazione/disattivazione funzionalità
+- **Plugin System**: Estensibilità per funzionalità custom
+- **Configuration Files**: Configurazioni specifiche per progetto
+
+## 🚨 **ANTIPATTERN DA EVITARE**
+
+- **Inline Styles**: Usa sempre classi Tailwind o CSS modules
+- **Any Types**: Evita `any`, usa sempre tipi specifici
+- **Prop Drilling**: Usa Context o state management per dati condivisi
+- **Large Components**: Mantieni componenti sotto 200 righe
+- **Direct DOM Manipulation**: Usa sempre React refs e state
+
+## 📚 **RISORSE E RIFERIMENTI**
+
+- **Documentazione**: README.md dettagliato nel progetto
+- **Component Library**: Storybook per componenti (se implementato)
+- **API Documentation**: Swagger/OpenAPI per endpoint
+- **Design System**: Figma o Sketch per design tokens
+
+---
+
+**Nota**: Queste regole sono progettate per mantenere la qualità e consistenza del codice in progetti enterprise. Seguile rigorosamente per garantire manutenibilità e scalabilità del codice.
