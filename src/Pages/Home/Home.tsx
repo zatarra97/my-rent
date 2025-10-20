@@ -10,17 +10,14 @@ const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <SEO
-        title="Showcase - Webapp dimostrativa"
-        description="Starter Kit generico per realizzare showcase webapp moderne. Layout responsive, componenti riutilizzabili e SEO integrata."
+        title="Lorem Ipsum - Webapp dimostrativa"
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
         keywords={[
-          'software fotovoltaico',
-          'monitoraggio impianti solari',
-          'gestione fotovoltaico',
-          'automazione GSE',
-          'telelettura automatica',
-          'dashboard fotovoltaico',
-          'consulenti energetici',
-          'installatori fotovoltaici'
+          'lorem',
+          'ipsum',
+          'dolor',
+          'sit',
+          'amet'
         ]}
         canonical="/"
       />
@@ -33,7 +30,7 @@ const Home: React.FC = () => {
       >
         <img
           src={heroImage}
-          alt="Impianto fotovoltaico"
+          alt="Immagine di copertina"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-black/30" />
@@ -41,16 +38,16 @@ const Home: React.FC = () => {
         <div className="relative z-10 container px-4 sm:px-6 lg:px-8 h-full flex items-center">
           <div className="text-white max-w-3xl">
             <h1 className="text-3xl lg:text-5xl font-semibold leading-tight">
-              Il software intelligente
+              Lorem ipsum dolor sit amet
               <br />
-              per la gestione degli
+              consectetur adipiscing elit
               <br />
-              impianti fotovoltaici
+              sed do eiusmod tempor
             </h1>
 
             <div className="mt-10 md:mt-14 flex flex-wrap gap-8">
-              <Link to="/cosa-e" className="btn btn-primary btn-big">SCOPRI DI PIÙ</Link>
-              <Link to="/contatti" className="btn btn-secondary btn-big">CONTATTACI</Link>
+              <Link to="/cosa-e" className="btn btn-primary btn-big">LOREM IPSUM</Link>
+              <Link to="/contatti" className="btn btn-secondary btn-big">DOLOR SIT</Link>
             </div>
           </div>
         </div>
@@ -61,9 +58,9 @@ const Home: React.FC = () => {
         <div className="container px-4 sm:px-6 lg:px-8">
           <div className="md:max-w-[800px]">
             <h2 className="text-xl lg:text-3xl font-semibold text-gray-900">
-              Tutto sotto controllo. Sempre.<br />
-              Gestisci adempimenti, monitora le performance, ottimizza l'efficienza.<br />
-              In un'unica piattaforma semplice e automatizzata.
+              Lorem ipsum dolor sit amet.<br />
+              Consectetur adipiscing elit, sed do.<br />
+              Eiusmod tempor incididunt ut labore.
               </h2>
           </div>
         </div>
@@ -77,7 +74,7 @@ const Home: React.FC = () => {
             <div>
               <img
                 src={homeScopri}
-                alt="Casa con pannelli fotovoltaici"
+                alt="Immagine illustrativa"
                 className="w-full rounded-3xl shadow-2xl object-cover"
               />
             </div>
@@ -85,12 +82,12 @@ const Home: React.FC = () => {
             {/* Testo */}
             <div>
               <h3 className="text-2xl lg:text-4xl font-semibold text-gray-900 leading-tight">
-                Questo Starter Kit è progettato per creare velocemente showcase webapp
-                moderne, accessibili e ottimizzate.
+                Lorem ipsum dolor sit amet, consectetur
+                adipiscing elit. Sed do eiusmod tempor.
               </h3>
               <p className="my-6 text-gray-900 text-base md:text-xl">
-                Include componenti base, gestione SEO, routing, layout responsive e
-                strumenti di sviluppo pronti all'uso.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat.
               </p>
               <div className="mt-12">
                 <a href="/cosa-e" className="btn btn-primary btn-big">SCOPRI DI PIÙ</a>
@@ -103,10 +100,10 @@ const Home: React.FC = () => {
       {/* Sezione: Cosa può fare */}
       <section className="py-24 bg-gradient-to-b from-sky-600 to-indigo-500 text-center text-white">
         <div className="container px-4 sm:px-6 lg:px-8">
-          <p className="uppercase  font-semibold text-xl md:text-xl">Cosa può fare</p>
-          <h3 className="mt-4 text-3xl sm:text-4xl font-bold">L'energia solare su misura per te</h3>
+          <p className="uppercase  font-semibold text-xl md:text-xl">Lorem ipsum</p>
+          <h3 className="mt-4 text-3xl sm:text-4xl font-bold">Dolor sit amet consectetur</h3>
           <div className="mt-8 flex justify-center">
-            <a href="/cosa-puoi-fare" className="btn btn-big btn-white ">ESPLORA</a>
+            <a href="/cosa-puoi-fare" className="btn btn-big btn-white ">LOREM</a>
           </div>
         </div>
       </section>
