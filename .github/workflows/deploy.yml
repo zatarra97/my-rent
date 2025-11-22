@@ -33,7 +33,11 @@ jobs:
               run: npm ci --legacy-peer-deps
 
             - name: Build
-              run: npm run build
+              run: |
+                  echo "Building with GITHUB_REPOSITORY=${{ github.repository }}"
+                  npm run build
+                  echo "Build completed. Checking index.html..."
+                  head -40 build/index.html
               env:
                   GITHUB_REPOSITORY: ${{ github.repository }}
                   NODE_ENV: production
