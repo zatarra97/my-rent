@@ -8,10 +8,15 @@ import Login from "./Pages/Login/Login"
 import ProtectedRoute from "./Components/ProtectedRoute"
 import ScrollToTop from "./Components/ScrollToTop"
 
+// Usa il base URL fornito da Vite (corrisponde al base path configurato in vite.config.js)
+// import.meta.env.BASE_URL è sempre una stringa che termina con '/'
+// Es: '/' per root, '/my-rent/' per repository progetto
+const basename = import.meta.env.BASE_URL
+
 const App: React.FC = () => {
 	return (
 		<AuthProvider>
-			<Router>
+			<Router basename={basename}>
 				<Routes>
 					<Route path="/login" element={<Login />} />
 					<Route
