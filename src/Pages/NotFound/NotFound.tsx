@@ -1,14 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faHome } from "@fortawesome/free-solid-svg-icons"
 import { Link } from "react-router-dom"
-import SEO from "../../Components/SEO"
 import Navbar from "../../Components/Navbar"
 import NotFoundGif from "../../Images/404.gif"
 
 export default function NotFound() {
 	return (
 		<div className="min-h-screen bg-white flex flex-col">
-			<SEO title="Pagina Non Trovata - 404" description="La pagina che stai cercando non esiste. Torna alla homepage." noindex={true} />
 			<Navbar />
 
 			<main className="flex-1 bg-slate-100">

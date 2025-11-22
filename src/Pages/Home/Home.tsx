@@ -1,6 +1,5 @@
 import React, { useMemo } from "react"
 import Navbar from "../../Components/Navbar"
-import SEO from "../../Components/SEO"
 
 interface Spesa {
 	data: string
@@ -110,13 +109,6 @@ const Home: React.FC = () => {
 
 	return (
 		<div className="min-h-screen bg-gray-50">
-			<SEO
-				title="Gestione spese affitto - riepilogo"
-				description="Riepilogo completo delle spese per l'affitto con calcolo del saldo tra proprietario e affittuario."
-				keywords={["affitto", "spese", "proprietario", "affittuario", "gestione"]}
-				canonical="/"
-				noindex={true}
-			/>
 			<Navbar />
 
 			{/* Header */}

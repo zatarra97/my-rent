@@ -1,7 +1,6 @@
 import React, { useState, FormEvent } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
-import SEO from "../../Components/SEO"
 
 const Login: React.FC = () => {
 	const [password, setPassword] = useState("")
@@ -31,7 +30,6 @@ const Login: React.FC = () => {
 
 	return (
 		<div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-			<SEO title="Login - Accesso" description="Accedi all'area riservata" noindex={true} />
 			<div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
 				<div className="text-center mb-8">
 					<h1 className="text-3xl font-semibold text-gray-900 mb-2">Accesso</h1>
