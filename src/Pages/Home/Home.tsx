@@ -1,118 +1,268 @@
-import React from 'react'
-import Navbar from '../../Components/Navbar'
-import Footer from '../../Components/Footer'
-import SEO from '../../Components/SEO'
-import heroImage from '../../Images/home_hero.jpg'
-import homeScopri from '../../Images/home_scopri.jpg'
-import { Link } from 'react-router-dom'
+import React, { useMemo } from "react"
+import Navbar from "../../Components/Navbar"
+import SEO from "../../Components/SEO"
+
+interface Spesa {
+	data: string
+	importo: number
+	descrizione: string
+	tipo: "proprietario" | "affittuario"
+}
 
 const Home: React.FC = () => {
-  return (
-    <div className="min-h-screen bg-white">
-      <SEO
-        title="Lorem Ipsum - Webapp dimostrativa"
-        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-        keywords={[
-          'lorem',
-          'ipsum',
-          'dolor',
-          'sit',
-          'amet'
-        ]}
-        canonical="/"
-      />
-      <Navbar />
+	// Dati delle spese
+	const spese: Spesa[] = useMemo(
+		() => [
+			{
+				id: 1,
+				data: "01/09/2025",
+				importo: 300.0,
+				descrizione: "Affitto Settembre 2025",
+				tipo: "proprietario",
+			},
+			{
+				id: 2,
+				data: "19/09/2025",
+				importo: 92.0,
+				descrizione: "Tari (Settembre - Dicembre 2025)",
+				tipo: "proprietario",
+			},
+			{
+				id: 3,
+				data: "01/10/2025",
+				importo: 300.0,
+				descrizione: "Affitto Ottobre 2025",
+				tipo: "proprietario",
+			},
+			{
+				id: 4,
+				data: "01/11/2025",
+				importo: 300.0,
+				descrizione: "Affitto Novembre 2025",
+				tipo: "proprietario",
+			},
+			{
+				id: 5,
+				data: "10/11/2025",
+				importo: 109.7,
+				descrizione: "Energia (Settembre - Ottobre 2025)",
+				tipo: "proprietario",
+			},
+			{
+				id: 6,
+				data: "17/11/2025",
+				importo: 20.05,
+				descrizione: "Gas (Luglio - Settembre €60.16/3 mesi)",
+				tipo: "proprietario",
+			},
+			{
+				id: 7,
+				data: "18/11/2025",
+				importo: 19.01,
+				descrizione: "Acqua 6^ emissione 2025",
+				tipo: "proprietario",
+			},
+			{
+				id: 8,
+				data: "18/11/2025",
+				importo: 26.33,
+				descrizione: "Condominio (Luglio - Settembre 2025 - €79,00/3 mesi)",
+				tipo: "proprietario",
+			},
+			{
+				id: 9,
+				data: "18/11/2025",
+				importo: 79.27,
+				descrizione: "Condominio (Ottobre - Dicembre 2025)",
+				tipo: "proprietario",
+			},
+			{
+				id: 10,
+				data: "22/11/2025",
+				importo: 1250.0,
+				descrizione: "Rimborso spese precedenti",
+				tipo: "affittuario",
+			},
+		],
+		[]
+	)
 
-      {/* Hero */}
-      <section
-        className="relative h-[550px] md:h-[600px] w-full overflow-hidden"
-        aria-label="Hero principale"
-      >
-        <img
-          src={heroImage}
-          alt="Immagine di copertina"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/30" />
+	// Calcolo del totale
+	const totale = useMemo(() => {
+		return spese.reduce((acc, spesa) => {
+			if (spesa.tipo === "proprietario") {
+				return acc + spesa.importo
+			} else {
+				return acc - spesa.importo
+			}
+		}, 0)
+	}, [spese])
 
-        <div className="relative z-10 container px-4 sm:px-6 lg:px-8 h-full flex items-center">
-          <div className="text-white max-w-3xl">
-            <h1 className="text-3xl lg:text-5xl font-semibold leading-tight">
-              Lorem ipsum dolor sit amet
-              <br />
-              consectetur adipiscing elit
-              <br />
-              sed do eiusmod tempor
-            </h1>
+	// Formattazione importo in formato italiano
+	const formattaImporto = (importo: number): string => {
+		return new Intl.NumberFormat("it-IT", {
+			style: "currency",
+			currency: "EUR",
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2,
+		}).format(importo)
+	}
 
-            <div className="mt-10 md:mt-14 flex flex-wrap gap-8">
-              <Link to="/cosa-e" className="btn btn-primary btn-big">LOREM IPSUM</Link>
-              <Link to="/contatti" className="btn btn-secondary btn-big">DOLOR SIT</Link>
-            </div>
-          </div>
-        </div>
-      </section>
+	return (
+		<div className="min-h-screen bg-gray-50">
+			<SEO
+				title="Gestione spese affitto - riepilogo"
+				description="Riepilogo completo delle spese per l'affitto con calcolo del saldo tra proprietario e affittuario."
+				keywords={["affitto", "spese", "proprietario", "affittuario", "gestione"]}
+				canonical="/"
+				noindex={true}
+			/>
+			<Navbar />
 
-      {/* Intro breve */}
-      <section className="py-16 md:py-20">
-        <div className="container px-4 sm:px-6 lg:px-8">
-          <div className="md:max-w-[800px]">
-            <h2 className="text-xl lg:text-3xl font-semibold text-gray-900">
-              Lorem ipsum dolor sit amet.<br />
-              Consectetur adipiscing elit, sed do.<br />
-              Eiusmod tempor incididunt ut labore.
-              </h2>
-          </div>
-        </div>
-      </section>
+			{/* Header */}
+			<section className="bg-white border-b border-gray-200 py-8 md:py-12">
+				<div className="container px-4 sm:px-6 lg:px-8">
+					<h1 className="text-2xl md:text-4xl font-semibold text-gray-900">Gestione spese</h1>
+					<p className="mt-2 text-base md:text-lg text-gray-600">Riepilogo completo delle spese e dei pagamenti.</p>
+				</div>
+			</section>
 
-      {/* Sezione: intro con immagine a sinistra e testo a destra */}
-      <section className="py-20 bg-gray-100">
-        <div className="container px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Immagine */}
-            <div>
-              <img
-                src={homeScopri}
-                alt="Immagine illustrativa"
-                className="w-full rounded-3xl shadow-2xl object-cover"
-              />
-            </div>
+			{/* Tabella Spese */}
+			<section className="py-8 md:py-12">
+				<div className="container px-2 sm:px-6 lg:px-8">
+					<div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+						{/* Tabella Desktop */}
+						<div className="hidden md:block overflow-x-auto">
+							<table className="w-full">
+								<thead>
+									<tr className="bg-primary text-white">
+										<th className="px-6 py-4 text-left text-sm font-semibold">Data notifica</th>
+										<th className="px-6 py-4 text-left text-sm font-semibold">Descrizione</th>
+										<th className="px-6 py-4 text-right text-sm font-semibold">Importo</th>
+										<th className="px-6 py-4 text-center text-sm font-semibold">Tipo</th>
+									</tr>
+								</thead>
+								<tbody>
+									{spese.map((spesa, index) => (
+										<tr key={index} className={`border-b border-gray-200 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
+											<td className="px-6 py-4 text-sm text-gray-900">{spesa.data}</td>
+											<td className="px-6 py-4 text-sm text-gray-900">{spesa.descrizione}</td>
+											<td
+												className={`px-6 py-4 text-sm text-right font-medium ${
+													spesa.tipo === "proprietario" ? "text-red-600" : "text-green-600"
+												}`}
+											>
+												{spesa.tipo === "proprietario" ? "+" : "-"}
+												{formattaImporto(spesa.importo)}
+											</td>
+											<td className="px-6 py-4 text-center">
+												<span
+													className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+														spesa.tipo === "proprietario" ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"
+													}`}
+												>
+													{spesa.tipo === "proprietario" ? "Proprietario" : "Affittuario"}
+												</span>
+											</td>
+										</tr>
+									))}
+									{/* Riga Totale */}
+									<tr className="bg-gray-100 border-t-2 border-gray-300">
+										<td colSpan={2} className="px-6 py-4 text-sm font-semibold text-gray-900">
+											TOTALE
+										</td>
+										<td className={`px-6 py-4 text-right text-lg font-bold ${totale >= 0 ? "text-red-600" : "text-green-600"}`}>
+											{formattaImporto(Math.abs(totale))}
+										</td>
+										<td className="px-6 py-4 text-center text-sm text-gray-600">
+											{totale >= 0 ? "Da riscuotere" : "Saldo positivo"}
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 
-            {/* Testo */}
-            <div>
-              <h3 className="text-2xl lg:text-4xl font-semibold text-gray-900 leading-tight">
-                Lorem ipsum dolor sit amet, consectetur
-                adipiscing elit. Sed do eiusmod tempor.
-              </h3>
-              <p className="my-6 text-gray-900 text-base md:text-xl">
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-              </p>
-              <div className="mt-12">
-                <a href="/cosa-e" className="btn btn-primary btn-big">SCOPRI DI PIÙ</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+						{/* Vista Mobile */}
+						<div className="md:hidden">
+							<div className="divide-y divide-gray-200">
+								{spese.map((spesa, index) => (
+									<div key={index} className="p-4">
+										<div className="flex justify-between items-start mb-2">
+											<div className="flex-1">
+												<p className="text-sm font-medium text-gray-900">{spesa.descrizione}</p>
+												<p className="text-xs text-gray-500 mt-1">{spesa.data}</p>
+											</div>
+											<div className="ml-4 text-right">
+												<p
+													className={`text-sm font-semibold ${
+														spesa.tipo === "proprietario" ? "text-red-600" : "text-green-600"
+													}`}
+												>
+													{spesa.tipo === "proprietario" ? "+" : "-"}
+													{formattaImporto(spesa.importo)}
+												</p>
+												<span
+													className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-1 ${
+														spesa.tipo === "proprietario" ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"
+													}`}
+												>
+													{spesa.tipo === "proprietario" ? "Proprietario" : "Affittuario"}
+												</span>
+											</div>
+										</div>
+									</div>
+								))}
+								{/* Totale Mobile */}
+								<div className="p-4 bg-gray-100 border-t-2 border-gray-300">
+									<div className="flex justify-between items-center">
+										<div>
+											<p className="text-sm font-semibold text-gray-900">TOTALE</p>
+											<p className="text-xs text-gray-600 mt-1">{totale >= 0 ? "Da riscuotere" : "Saldo positivo"}</p>
+										</div>
+										<p className={`text-lg font-bold ${totale >= 0 ? "text-red-600" : "text-green-600"}`}>
+											{formattaImporto(Math.abs(totale))}
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 
-      {/* Sezione: Cosa può fare */}
-      <section className="py-24 bg-gradient-to-b from-sky-600 to-indigo-500 text-center text-white">
-        <div className="container px-4 sm:px-6 lg:px-8">
-          <p className="uppercase  font-semibold text-xl md:text-xl">Lorem ipsum</p>
-          <h3 className="mt-4 text-3xl sm:text-4xl font-bold">Dolor sit amet consectetur</h3>
-          <div className="mt-8 flex justify-center">
-            <a href="/cosa-puoi-fare" className="btn btn-big btn-white ">LOREM</a>
-          </div>
-        </div>
-      </section>
-
-      <Footer />
-    </div>
-  )
+					{/* Info Box */}
+					<div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4 md:p-6">
+						<div className="flex items-start">
+							<div className="flex-shrink-0">
+								<svg className="h-5 w-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+									<path
+										fillRule="evenodd"
+										d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+										clipRule="evenodd"
+									/>
+								</svg>
+							</div>
+							<div className="ml-3 flex-1">
+								<h3 className="text-sm font-medium text-blue-900 mb-2">Legenda</h3>
+								<ul className="text-sm text-blue-800 space-y-1">
+									<li>
+										<span className="font-semibold text-red-600">+ Importo</span> = Spesa del proprietario (da sommare)
+									</li>
+									<li>
+										<span className="font-semibold text-green-600">- Importo</span> = Pagamento dell'affittuario (da sottrarre)
+									</li>
+									<li>
+										<span className="font-semibold">Totale positivo</span> = Importo da riscuotere dall'affittuario
+									</li>
+									<li>
+										<span className="font-semibold">Totale negativo</span> = Saldo positivo (affittuario in credito)
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	)
 }
 
 export default Home
-
-

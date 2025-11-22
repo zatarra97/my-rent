@@ -208,7 +208,63 @@ Questo progetto richiede Node.js versione 22 o superiore.
 
 ## 🔧 Configurazione
 
-Non ha bisogno del file `.env.
+### Variabili d'Ambiente
+
+Crea un file `.env` nella root del progetto con:
+
+```env
+VITE_LOGIN_PASSWORD=la_tua_password_qui
+```
+
+**Nota**: In Vite, le variabili d'ambiente devono essere prefissate con `VITE_` per essere esposte al client.
+
+### Deploy su GitHub Pages
+
+Il progetto è configurato per il deploy automatico su GitHub Pages tramite GitHub Actions.
+
+#### Prerequisiti
+
+- Repository GitHub (pubblico o privato con account a pagamento)
+- Branch `main` o `master` come branch principale
+
+#### Configurazione
+
+1. **Abilita GitHub Pages nel repository**:
+   - Vai su: `Settings` > `Pages`
+   - Sotto "Source", seleziona `GitHub Actions`
+
+2. **Configura le variabili d'ambiente (se necessario)**:
+   - Vai su: `Settings` > `Secrets and variables` > `Actions`
+   - Clicca su `New repository secret`
+   - Aggiungi `VITE_LOGIN_PASSWORD` con il valore della password
+
+3. **Push del codice**:
+   ```bash
+   git add .
+   git commit -m "Setup GitHub Pages"
+   git push origin main
+   ```
+
+4. **Il workflow si attiverà automaticamente**:
+   - Vai su: `Actions` nel tuo repository
+   - Il workflow `Deploy to GitHub Pages` verrà eseguito automaticamente
+   - Al termine, il sito sarà disponibile su: `https://username.github.io/repository-name/`
+
+#### Base Path
+
+Il base path viene configurato automaticamente in base al nome del repository:
+- Se il repository è `username.github.io`: il base path è `/`
+- Se il repository è un progetto: il base path è `/repository-name/`
+
+Per testare in locale con un base path diverso, crea un file `.env.local`:
+```env
+VITE_BASE_PATH=/repository-name/
+```
+
+#### Repository Pubblico vs Privato
+
+- **Repository Pubblico**: GitHub Pages è gratuito
+- **Repository Privato**: Richiede GitHub Pro, Team o Enterprise (a pagamento)
 
 ## 📚 Documentazione
 
