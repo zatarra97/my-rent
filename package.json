@@ -1,6 +1,6 @@
 {
   "name": "showcase-webapp-starter",
-  "private": true,
+  "private": false,
   "version": "0.0.1",
   "type": "module",
   "description": "Starter Kit generico per webapp showcase con React, Vite e Tailwind.",
