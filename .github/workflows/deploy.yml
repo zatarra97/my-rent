@@ -34,7 +34,18 @@ jobs:
               run: npm ci --legacy-peer-deps
 
             - name: Build
-              run: npm run build
+              run: |
+                  echo "Building with GITHUB_REPOSITORY=${{ github.repository }}"
+                  npm run build
+                  echo "=== Build completed. Checking index.html ==="
+                  head -50 build/index.html
+                  echo "=== Checking for main.tsx (should NOT exist) ==="
+                  if grep -q "main.tsx" build/index.html; then
+                      echo "ERROR: main.tsx found in build/index.html!"
+                      exit 1
+                  else
+                      echo "✓ main.tsx correctly processed by Vite"
+                  fi
               env:
                   GITHUB_REPOSITORY: ${{ github.repository }}
                   NODE_ENV: production

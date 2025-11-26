@@ -14,10 +14,18 @@ const getBasePath = () => {
 	if (process.env.GITHUB_REPOSITORY) {
 		const repoName = process.env.GITHUB_REPOSITORY.split("/")[1]
 		// Se il repository è 'username.github.io', usa '/', altrimenti '/repository-name/'
-		return repoName.endsWith(".github.io") ? "/" : `/${repoName}/`
+		const base = repoName.endsWith(".github.io") ? "/" : `/${repoName}/`
+		if (process.env.NODE_ENV === "production") {
+			console.log(`[Vite Config] Base path: ${base} (repository: ${repoName})`)
+		}
+		return base
 	}
 	// In locale, controlla la variabile d'ambiente o usa '/'
-	return process.env.VITE_BASE_PATH || "/"
+	const base = process.env.VITE_BASE_PATH || "/"
+	if (process.env.NODE_ENV === "production") {
+		console.log(`[Vite Config] Base path: ${base} (locale)`)
+	}
+	return base
 }
 
 // https://vite.dev/config/
