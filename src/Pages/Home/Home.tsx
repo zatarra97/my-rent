@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react"
+import React, { useMemo } from "react"
 import Navbar from "../../Components/Navbar"
 
 interface Spesa {
@@ -10,8 +10,6 @@ interface Spesa {
 }
 
 const Home: React.FC = () => {
-	const [includeRimborsi, setIncludeRimborsi] = useState(false)
-
 	// Dati delle spese
 	const spese: Spesa[] = useMemo(
 		() => [
@@ -237,7 +235,7 @@ const Home: React.FC = () => {
 		})
 	}, [spese])
 
-	// Funzione per calcolare il totale di un mese
+	// Funzione per calcolare il totale di un mese (senza rimborsi)
 	const getTotaleMese = useMemo(() => {
 		return (meseData: (typeof spesePerMese)[0]): number => {
 			let totale = 0
@@ -250,15 +248,9 @@ const Home: React.FC = () => {
 			totale += meseData.assicurazione.reduce((acc, s) => acc + s.importo, 0)
 			totale += meseData.varie.reduce((acc, s) => acc + s.importo, 0)
 
-			// Se la checkbox è attiva, sottrai i rimborsi
-			if (includeRimborsi) {
-				const totaleRimborsiMese = meseData.rimborsi.reduce((acc, r) => acc + r.importo, 0)
-				totale -= totaleRimborsiMese
-			}
-
 			return totale
 		}
-	}, [includeRimborsi])
+	}, [])
 
 	// Funzione helper per ottenere l'importo per categoria
 	const getImportoPerCategoria = (categoria: string): number => {
@@ -391,22 +383,8 @@ const Home: React.FC = () => {
 										<th className="px-4 py-4 text-right text-sm font-semibold border-r border-white/20">Tari</th>
 										<th className="px-4 py-4 text-right text-sm font-semibold border-r border-white/20">Ass.</th>
 										<th className="px-4 py-4 text-right text-sm font-semibold border-r border-white/20">Varie</th>
-										<th className="px-4 py-4 text-right text-sm font-semibold border-r border-white/20">Rimborsi</th>
-										<th className="px-4 py-4 text-right text-sm font-semibold">
-											<div className="flex items-center justify-end gap-2">
-												<span>Totale</span>
-												<br />
-												<label className="flex items-center gap-2 cursor-pointer text-xs">
-													<input
-														type="checkbox"
-														checked={includeRimborsi}
-														onChange={(e) => setIncludeRimborsi(e.target.checked)}
-														className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
-													/>
-													<span>Includi rimborsi</span>
-												</label>
-											</div>
-										</th>
+										<th className="px-4 py-4 text-right text-sm font-semibold border-r border-white/20">Totale</th>
+										<th className="px-4 py-4 text-right text-sm font-semibold">Rimborsi</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -440,6 +418,14 @@ const Home: React.FC = () => {
 												{renderCellaSpese(meseData.varie)}
 											</td>
 											<td className="px-4 py-4 text-sm text-right border-r border-gray-200">
+												<div className="font-semibold">
+													<span className={getTotaleMese(meseData) >= 0 ? "text-red-600" : "text-green-600"}>
+														{getTotaleMese(meseData) >= 0 ? "+" : ""}
+														{formattaImporto(Math.abs(getTotaleMese(meseData)))}
+													</span>
+												</div>
+											</td>
+											<td className="px-4 py-4 text-sm text-right">
 												{meseData.rimborsi.length > 0 ? (
 													<div className="space-y-1">
 														{meseData.rimborsi.map((rimborso, rIndex) => (
@@ -476,14 +462,6 @@ const Home: React.FC = () => {
 												) : (
 													<span className="text-gray-400">-</span>
 												)}
-											</td>
-											<td className="px-4 py-4 text-sm text-right">
-												<div className="font-semibold">
-													<span className={getTotaleMese(meseData) >= 0 ? "text-red-600" : "text-green-600"}>
-														{getTotaleMese(meseData) >= 0 ? "+" : ""}
-														{formattaImporto(Math.abs(getTotaleMese(meseData)))}
-													</span>
-												</div>
 											</td>
 										</tr>
 									))}
@@ -531,13 +509,13 @@ const Home: React.FC = () => {
 											)}
 										</td>
 										<td className="px-4 py-4 text-sm text-right font-semibold border-r border-gray-300">
-											{totaleRimborsi !== 0 && <span className="text-green-600">-{formattaImporto(totaleRimborsi)}</span>}
-										</td>
-										<td className="px-4 py-4 text-sm text-right font-semibold">
 											<span className={totaleRighe >= 0 ? "text-red-600" : "text-green-600"}>
 												{totaleRighe >= 0 ? "+" : ""}
 												{formattaImporto(Math.abs(totaleRighe))}
 											</span>
+										</td>
+										<td className="px-4 py-4 text-sm text-right font-semibold">
+											{totaleRimborsi !== 0 && <span className="text-green-600">-{formattaImporto(totaleRimborsi)}</span>}
 										</td>
 									</tr>
 									{/* Riga Saldo Finale */}
@@ -555,18 +533,6 @@ const Home: React.FC = () => {
 
 						{/* Vista Mobile */}
 						<div className="md:hidden">
-							{/* Checkbox per includere rimborsi */}
-							<div className="p-4 bg-gray-50 border-b border-gray-200">
-								<label className="flex items-center gap-2 cursor-pointer">
-									<input
-										type="checkbox"
-										checked={includeRimborsi}
-										onChange={(e) => setIncludeRimborsi(e.target.checked)}
-										className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
-									/>
-									<span className="text-sm font-medium text-gray-700">Includi rimborsi nel totale</span>
-								</label>
-							</div>
 							<div className="divide-y divide-gray-200">
 								{spesePerMese.map((meseData, index) => (
 									<div key={index} className="p-4">
@@ -740,9 +706,23 @@ const Home: React.FC = () => {
 													))}
 												</div>
 											)}
+											{/* Totale Mese */}
+											<div className="pt-3 mt-3 border-t-2 border-gray-300">
+												<div className="flex justify-between items-center">
+													<p className="text-sm font-semibold text-gray-900">Totale mese</p>
+													<p
+														className={`text-base font-bold ${
+															getTotaleMese(meseData) >= 0 ? "text-red-600" : "text-green-600"
+														}`}
+													>
+														{getTotaleMese(meseData) >= 0 ? "+" : ""}
+														{formattaImporto(Math.abs(getTotaleMese(meseData)))}
+													</p>
+												</div>
+											</div>
 											{/* Rimborsi */}
 											{meseData.rimborsi.length > 0 && (
-												<div className="pt-2 border-t border-gray-200">
+												<div className="pt-2 mt-2 border-t border-gray-200">
 													<p className="text-xs font-semibold text-gray-700 mb-2">Rimborsi</p>
 													{meseData.rimborsi.map((rimborso, rIndex) => (
 														<div key={rIndex} className="flex justify-between items-start mb-2">
@@ -759,20 +739,6 @@ const Home: React.FC = () => {
 													))}
 												</div>
 											)}
-											{/* Totale Mese */}
-											<div className="pt-3 mt-3 border-t-2 border-gray-300">
-												<div className="flex justify-between items-center">
-													<p className="text-sm font-semibold text-gray-900">Totale mese</p>
-													<p
-														className={`text-base font-bold ${
-															getTotaleMese(meseData) >= 0 ? "text-red-600" : "text-green-600"
-														}`}
-													>
-														{getTotaleMese(meseData) >= 0 ? "+" : ""}
-														{formattaImporto(Math.abs(getTotaleMese(meseData)))}
-													</p>
-												</div>
-											</div>
 										</div>
 									</div>
 								))}
