@@ -36,6 +36,7 @@ jobs:
             - name: Build
               run: |
                   echo "Building with GITHUB_REPOSITORY=${{ github.repository }}"
+                  echo "Setting VITE_BASE_PATH=/my-rent/"
                   npm run build
                   echo "=== Build completed. Checking index.html ==="
                   head -50 build/index.html
@@ -49,6 +50,7 @@ jobs:
               env:
                   GITHUB_REPOSITORY: ${{ github.repository }}
                   NODE_ENV: production
+                  VITE_BASE_PATH: /my-rent/
                   VITE_LOGIN_PASSWORD: ${{ secrets.VITE_LOGIN_PASSWORD }}
 
             - name: Setup Pages
