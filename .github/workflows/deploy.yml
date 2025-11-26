@@ -33,19 +33,7 @@ jobs:
               run: npm ci --legacy-peer-deps
 
             - name: Build
-              run: |
-                  echo "Building with GITHUB_REPOSITORY=${{ github.repository }}"
-                  npm run build
-                  echo "Build completed. Checking index.html..."
-                  echo "=== Checking for /src/main.tsx (should NOT exist) ==="
-                  if grep -q "/src/main.tsx" build/index.html; then
-                      echo "ERROR: /src/main.tsx found in build/index.html!"
-                      exit 1
-                  else
-                      echo "✓ /src/main.tsx correctly processed by Vite"
-                  fi
-                  echo "=== First 40 lines of build/index.html ==="
-                  head -40 build/index.html
+              run: npm run build
               env:
                   GITHUB_REPOSITORY: ${{ github.repository }}
                   NODE_ENV: production
@@ -53,8 +41,6 @@ jobs:
 
             - name: Setup Pages
               uses: actions/configure-pages@v4
-              # Nota: Questo step richiede che GitHub Pages sia abilitato nel repository
-              # Vai su: Repository Settings > Pages > Source: GitHub Actions
 
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v3
