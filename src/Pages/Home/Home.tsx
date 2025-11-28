@@ -1,5 +1,6 @@
 import React, { useMemo } from "react"
 import Navbar from "../../Components/Navbar"
+import Chart from "react-apexcharts"
 
 interface Spesa {
 	data: string
@@ -276,6 +277,104 @@ const Home: React.FC = () => {
 			maximumFractionDigits: 2,
 		}).format(importo)
 	}
+
+	// Dati per il grafico ad area
+	const chartData = useMemo(() => {
+		const categories = spesePerMese.map((m) => m.mese.split(" ")[0])
+		const data = spesePerMese.map((m) => getTotaleMese(m))
+
+		// Determina il colore in base al segno del totale
+		const hasPositive = data.some((d) => d >= 0)
+		const hasNegative = data.some((d) => d < 0)
+		const chartColor = hasPositive && !hasNegative ? "#EF4444" : hasNegative && !hasPositive ? "#10B981" : "#EF4444"
+
+		return {
+			categories,
+			data,
+			color: chartColor,
+		}
+	}, [spesePerMese, getTotaleMese])
+
+	// Opzioni del grafico ApexCharts
+	const chartOptions = useMemo(() => {
+		return {
+			chart: {
+				height: "100%",
+				maxWidth: "100%",
+				type: "area" as const,
+				fontFamily: "Inter, sans-serif",
+				dropShadow: {
+					enabled: false,
+				},
+				toolbar: {
+					show: false,
+				},
+			},
+			tooltip: {
+				enabled: true,
+				x: {
+					show: false,
+				},
+				y: {
+					formatter: (value: number) => {
+						return (value >= 0 ? "+" : "") + formattaImporto(Math.abs(value))
+					},
+				},
+			},
+			fill: {
+				type: "gradient",
+				gradient: {
+					opacityFrom: 0.55,
+					opacityTo: 0,
+					shade: chartData.color,
+					gradientToColors: [chartData.color],
+				},
+			},
+			dataLabels: {
+				enabled: false,
+			},
+			stroke: {
+				width: 6,
+				curve: "smooth" as const,
+			},
+			grid: {
+				show: false,
+				strokeDashArray: 4,
+				padding: {
+					left: 2,
+					right: 2,
+					top: 0,
+				},
+			},
+			series: [
+				{
+					name: "Totale mese",
+					data: chartData.data,
+					color: chartData.color,
+				},
+			],
+			xaxis: {
+				categories: chartData.categories,
+				labels: {
+					show: true,
+					style: {
+						fontSize: "12px",
+						fontFamily: "Inter, sans-serif",
+						colors: "#6B7280",
+					},
+				},
+				axisBorder: {
+					show: false,
+				},
+				axisTicks: {
+					show: false,
+				},
+			},
+			yaxis: {
+				show: false,
+			},
+		}
+	}, [chartData, formattaImporto])
 
 	// Funzione helper per renderizzare una cella con più spese
 	const renderCellaSpese = (speseArray: Array<{ data: string; importo: number; descrizione: string }>) => {
@@ -831,34 +930,42 @@ const Home: React.FC = () => {
 						</div>
 					</div>
 
-					{/* Info Box */}
-					<div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4 md:p-6">
-						<div className="flex items-start">
-							<div className="flex-shrink-0">
-								<svg className="h-5 w-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-									<path
-										fillRule="evenodd"
-										d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-										clipRule="evenodd"
-									/>
-								</svg>
+					{/* Grafico Totali Mensili */}
+					<div className="mt-6 bg-white border border-gray-200 rounded-lg shadow-sm p-4 md:p-6">
+						<div className="flex justify-between items-start mb-4">
+							<div>
+								<h5 className="text-2xl font-semibold text-gray-900">{formattaImporto(Math.abs(totaleRighe))}</h5>
+								<p className="text-gray-600">Totale spese</p>
 							</div>
-							<div className="ml-3 flex-1">
-								<h3 className="text-sm font-medium text-blue-900 mb-2">Legenda</h3>
-								<ul className="text-sm text-blue-800 space-y-1">
-									<li>
-										<span className="font-semibold text-red-600">+ Importo</span> = Spesa del proprietario (da sommare)
-									</li>
-									<li>
-										<span className="font-semibold text-green-600">- Importo</span> = Pagamento dell'affittuario (da sottrarre)
-									</li>
-									<li>
-										<span className="font-semibold">Totale positivo</span> = Importo da riscuotere dall'affittuario
-									</li>
-									<li>
-										<span className="font-semibold">Totale negativo</span> = Saldo positivo (affittuario in credito)
-									</li>
-								</ul>
+							<div className="flex items-center px-2.5 py-0.5 font-medium text-center">
+								<span className={`text-sm ${totale >= 0 ? "text-red-600" : "text-green-600"}`}>
+									{totale >= 0 ? "Da riscuotere" : "Saldo positivo"}
+								</span>
+							</div>
+						</div>
+
+						{/* Grafico ad area */}
+						<div className="mt-6">
+							<div id="area-chart" className="h-64">
+								<Chart options={chartOptions} series={chartOptions.series} type="area" height="100%" />
+							</div>
+						</div>
+
+						<div className="grid grid-cols-1 items-center border-t border-gray-200 justify-between mt-4 pt-4">
+							<div className="flex justify-between items-center">
+								<div className="text-sm font-medium text-gray-700">
+									{spesePerMese.length} {spesePerMese.length === 1 ? "mese" : "mesi"} visualizzati
+								</div>
+								<div className="flex items-center gap-4 text-xs text-gray-600">
+									<div className="flex items-center gap-2">
+										<div className="w-3 h-3 bg-red-500 rounded"></div>
+										<span>Spese</span>
+									</div>
+									<div className="flex items-center gap-2">
+										<div className="w-3 h-3 bg-green-500 rounded"></div>
+										<span>Credito</span>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
