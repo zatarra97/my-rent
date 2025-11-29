@@ -84,6 +84,13 @@ const Home: React.FC = () => {
 				tipo: "affittuario",
 				categoria: "varie",
 			},
+			{
+				data: "01/12/2025",
+				importo: 300.0,
+				descrizione: "",
+				tipo: "proprietario",
+				categoria: "affitto",
+			},
 		],
 		[]
 	)
@@ -278,6 +285,35 @@ const Home: React.FC = () => {
 		}).format(importo)
 	}
 
+	// Calcolo statistiche mensili
+	const statisticheMensili = useMemo(() => {
+		const totaliMensili = spesePerMese.map((m) => getTotaleMese(m))
+		const media = totaliMensili.length > 0 ? totaliMensili.reduce((acc, val) => acc + val, 0) / totaliMensili.length : 0
+		const minimo = totaliMensili.length > 0 ? Math.min(...totaliMensili) : 0
+		const massimo = totaliMensili.length > 0 ? Math.max(...totaliMensili) : 0
+		
+		// Calcola il trend (confronto tra ultimo e penultimo mese)
+		let trend: { valore: number; percentuale: number; direzione: "up" | "down" | "stable" } | null = null
+		if (totaliMensili.length >= 2) {
+			const ultimo = totaliMensili[totaliMensili.length - 1]
+			const penultimo = totaliMensili[totaliMensili.length - 2]
+			const differenza = ultimo - penultimo
+			const percentuale = penultimo !== 0 ? (differenza / Math.abs(penultimo)) * 100 : 0
+			trend = {
+				valore: differenza,
+				percentuale: Math.abs(percentuale),
+				direzione: differenza > 0 ? "up" : differenza < 0 ? "down" : "stable",
+			}
+		}
+
+		return {
+			media,
+			minimo,
+			massimo,
+			trend,
+		}
+	}, [spesePerMese, getTotaleMese])
+
 	// Dati per il grafico ad area
 	const chartData = useMemo(() => {
 		const categories = spesePerMese.map((m) => m.mese.split(" ")[0])
@@ -297,6 +333,9 @@ const Home: React.FC = () => {
 
 	// Opzioni del grafico ApexCharts
 	const chartOptions = useMemo(() => {
+		// Crea una serie per la linea della media
+		const mediaData = chartData.data.map(() => statisticheMensili.media)
+
 		return {
 			chart: {
 				height: "100%",
@@ -313,12 +352,49 @@ const Home: React.FC = () => {
 			tooltip: {
 				enabled: true,
 				x: {
-					show: false,
+					show: true,
+					formatter: (val: number) => {
+						return chartData.categories[val] || ""
+					},
 				},
 				y: {
-					formatter: (value: number) => {
-						return (value >= 0 ? "+" : "") + formattaImporto(Math.abs(value))
+					formatter: (value: number, { seriesIndex }: { seriesIndex: number }) => {
+						if (seriesIndex === 0) {
+							// Serie principale
+							return (value >= 0 ? "+" : "") + formattaImporto(Math.abs(value))
+						} else {
+							// Serie media
+							return "Media: " + (value >= 0 ? "+" : "") + formattaImporto(Math.abs(value))
+						}
 					},
+				},
+				custom: ({ series, dataPointIndex }: any) => {
+					const valoreMese = series[0][dataPointIndex]
+					const media = statisticheMensili.media
+					const differenzaMedia = valoreMese - media
+					const percentualeMedia = media !== 0 ? (differenzaMedia / Math.abs(media)) * 100 : 0
+
+					return `
+						<div class="p-3 bg-gray-900 text-white rounded-lg shadow-lg">
+							<div class="text-xs text-gray-400 mb-1">${chartData.categories[dataPointIndex]}</div>
+							<div class="text-base font-semibold mb-2">
+								${valoreMese >= 0 ? "+" : ""}${formattaImporto(Math.abs(valoreMese))}
+							</div>
+							<div class="text-xs space-y-1 pt-2 border-t border-gray-700">
+								<div class="flex justify-between">
+									<span class="text-gray-400">Media:</span>
+									<span>${media >= 0 ? "+" : ""}${formattaImporto(Math.abs(media))}</span>
+								</div>
+								<div class="flex justify-between">
+									<span class="text-gray-400">Scostamento:</span>
+									<span class="${differenzaMedia >= 0 ? "text-red-400" : "text-green-400"}">
+										${differenzaMedia >= 0 ? "+" : ""}${formattaImporto(Math.abs(differenzaMedia))} 
+										(${differenzaMedia >= 0 ? "+" : ""}${Math.abs(percentualeMedia).toFixed(1)}%)
+									</span>
+								</div>
+							</div>
+						</div>
+					`
 				},
 			},
 			fill: {
@@ -334,23 +410,30 @@ const Home: React.FC = () => {
 				enabled: false,
 			},
 			stroke: {
-				width: 6,
-				curve: "smooth" as const,
+				width: [6, 2],
+				curve: ["smooth" as const, "straight" as const],
+				dashArray: [0, 5],
 			},
 			grid: {
-				show: false,
+				show: true,
 				strokeDashArray: 4,
 				padding: {
-					left: 2,
+					left: 10,
 					right: 2,
 					top: 0,
 				},
+				borderColor: "#E5E7EB",
 			},
 			series: [
 				{
 					name: "Totale mese",
 					data: chartData.data,
 					color: chartData.color,
+				},
+				{
+					name: "Media mensile",
+					data: mediaData,
+					color: "#3B82F6",
 				},
 			],
 			xaxis: {
@@ -371,10 +454,52 @@ const Home: React.FC = () => {
 				},
 			},
 			yaxis: {
-				show: false,
+				show: true,
+				labels: {
+					show: true,
+					style: {
+						fontSize: "12px",
+						fontFamily: "Inter, sans-serif",
+						colors: "#6B7280",
+					},
+					formatter: (value: number) => {
+						// Formatta i valori in modo compatto per l'asse Y
+						if (Math.abs(value) >= 1000) {
+							return (value >= 0 ? "+" : "") + (value / 1000).toFixed(1) + "k€"
+						}
+						return (value >= 0 ? "+" : "") + Math.round(value).toString() + "€"
+					},
+				},
+				axisBorder: {
+					show: true,
+					color: "#E5E7EB",
+				},
+				axisTicks: {
+					show: true,
+					color: "#E5E7EB",
+				},
+				title: {
+					text: "Importo (€)",
+					style: {
+						fontSize: "12px",
+						fontFamily: "Inter, sans-serif",
+						fontWeight: 500,
+						color: "#6B7280",
+					},
+				},
+			},
+			legend: {
+				show: true,
+				position: "top" as const,
+				horizontalAlign: "right" as const,
+				fontSize: "12px",
+				fontFamily: "Inter, sans-serif",
+				markers: {
+					size: 8,
+				},
 			},
 		}
-	}, [chartData, formattaImporto])
+	}, [chartData, statisticheMensili, formattaImporto])
 
 	// Funzione helper per renderizzare una cella con più spese
 	const renderCellaSpese = (speseArray: Array<{ data: string; importo: number; descrizione: string }>) => {
@@ -937,10 +1062,40 @@ const Home: React.FC = () => {
 								<h5 className="text-2xl font-semibold text-gray-900">{formattaImporto(Math.abs(totaleRighe))}</h5>
 								<p className="text-gray-600">Totale spese</p>
 							</div>
-							<div className="flex items-center px-2.5 py-0.5 font-medium text-center">
-								<span className={`text-sm ${totale >= 0 ? "text-red-600" : "text-green-600"}`}>
-									{totale >= 0 ? "Da riscuotere" : "Saldo positivo"}
-								</span>
+							<div className="text-right">
+								<div className="text-sm text-gray-500 mb-1">Media mensile</div>
+								<div className={`text-xl font-semibold ${statisticheMensili.media >= 0 ? "text-red-600" : "text-green-600"}`}>
+									{statisticheMensili.media >= 0 ? "+" : ""}
+									{formattaImporto(Math.abs(statisticheMensili.media))}
+								</div>
+								{statisticheMensili.trend && (
+									<div className={`text-xs mt-1 flex items-center gap-1 ${
+										statisticheMensili.trend.direzione === "up" ? "text-red-600" : 
+										statisticheMensili.trend.direzione === "down" ? "text-green-600" : 
+										"text-gray-500"
+									}`}>
+										{statisticheMensili.trend.direzione === "up" && (
+											<svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+											</svg>
+										)}
+										{statisticheMensili.trend.direzione === "down" && (
+											<svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+											</svg>
+										)}
+										{statisticheMensili.trend.direzione === "stable" && (
+											<svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14" />
+											</svg>
+										)}
+										<span>
+											{statisticheMensili.trend.direzione === "up" ? "+" : ""}
+											{formattaImporto(Math.abs(statisticheMensili.trend.valore))} 
+											({statisticheMensili.trend.percentuale.toFixed(1)}%)
+										</span>
+									</div>
+								)}
 							</div>
 						</div>
 
@@ -951,7 +1106,7 @@ const Home: React.FC = () => {
 							</div>
 						</div>
 
-						<div className="grid grid-cols-1 items-center border-t border-gray-200 justify-between mt-4 pt-4">
+						<div className="grid grid-cols-1 md:grid-cols-2 items-center border-t border-gray-200 justify-between mt-4 pt-4 gap-4">
 							<div className="flex justify-between items-center">
 								<div className="text-sm font-medium text-gray-700">
 									{spesePerMese.length} {spesePerMese.length === 1 ? "mese" : "mesi"} visualizzati
@@ -965,6 +1120,28 @@ const Home: React.FC = () => {
 										<div className="w-3 h-3 bg-green-500 rounded"></div>
 										<span>Credito</span>
 									</div>
+								</div>
+							</div>
+							<div className="flex items-center gap-6 text-xs text-gray-600">
+								<div className="flex flex-col">
+									<span className="text-gray-500 mb-1">Minimo</span>
+									<span className={`font-semibold ${statisticheMensili.minimo >= 0 ? "text-red-600" : "text-green-600"}`}>
+										{statisticheMensili.minimo >= 0 ? "+" : ""}
+										{formattaImporto(Math.abs(statisticheMensili.minimo))}
+									</span>
+								</div>
+								<div className="flex flex-col">
+									<span className="text-gray-500 mb-1">Massimo</span>
+									<span className={`font-semibold ${statisticheMensili.massimo >= 0 ? "text-red-600" : "text-green-600"}`}>
+										{statisticheMensili.massimo >= 0 ? "+" : ""}
+										{formattaImporto(Math.abs(statisticheMensili.massimo))}
+									</span>
+								</div>
+								<div className="flex flex-col">
+									<span className="text-gray-500 mb-1">Variazione</span>
+									<span className="font-semibold text-gray-700">
+										{formattaImporto(Math.abs(statisticheMensili.massimo - statisticheMensili.minimo))}
+									</span>
 								</div>
 							</div>
 						</div>
