@@ -91,6 +91,20 @@ const Home: React.FC = () => {
 				tipo: "proprietario",
 				categoria: "affitto",
 			},
+			{
+				data: "01/01/2026",
+				importo: 300.0,
+				descrizione: "",
+				tipo: "proprietario",
+				categoria: "affitto",
+			},
+			{
+				data: "05/01/2026",
+				importo: 600.0,
+				descrizione: "",
+				tipo: "affittuario",
+				categoria: "varie",
+			},
 		],
 		[]
 	)
@@ -291,7 +305,7 @@ const Home: React.FC = () => {
 		const media = totaliMensili.length > 0 ? totaliMensili.reduce((acc, val) => acc + val, 0) / totaliMensili.length : 0
 		const minimo = totaliMensili.length > 0 ? Math.min(...totaliMensili) : 0
 		const massimo = totaliMensili.length > 0 ? Math.max(...totaliMensili) : 0
-		
+
 		// Calcola il trend (confronto tra ultimo e penultimo mese)
 		let trend: { valore: number; percentuale: number; direzione: "up" | "down" | "stable" } | null = null
 		if (totaliMensili.length >= 2) {
@@ -1069,11 +1083,15 @@ const Home: React.FC = () => {
 									{formattaImporto(Math.abs(statisticheMensili.media))}
 								</div>
 								{statisticheMensili.trend && (
-									<div className={`text-xs mt-1 flex items-center gap-1 ${
-										statisticheMensili.trend.direzione === "up" ? "text-red-600" : 
-										statisticheMensili.trend.direzione === "down" ? "text-green-600" : 
-										"text-gray-500"
-									}`}>
+									<div
+										className={`text-xs mt-1 flex items-center gap-1 ${
+											statisticheMensili.trend.direzione === "up"
+												? "text-red-600"
+												: statisticheMensili.trend.direzione === "down"
+												? "text-green-600"
+												: "text-gray-500"
+										}`}
+									>
 										{statisticheMensili.trend.direzione === "up" && (
 											<svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
@@ -1091,8 +1109,8 @@ const Home: React.FC = () => {
 										)}
 										<span>
 											{statisticheMensili.trend.direzione === "up" ? "+" : ""}
-											{formattaImporto(Math.abs(statisticheMensili.trend.valore))} 
-											({statisticheMensili.trend.percentuale.toFixed(1)}%)
+											{formattaImporto(Math.abs(statisticheMensili.trend.valore))}(
+											{statisticheMensili.trend.percentuale.toFixed(1)}%)
 										</span>
 									</div>
 								)}
