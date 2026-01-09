@@ -105,6 +105,28 @@ const Home: React.FC = () => {
 				tipo: "affittuario",
 				categoria: "varie",
 			},
+			{
+				data: "09/01/2026",
+				importo: 298.75,
+				descrizione: "Gennaio - Dicembre 2026 (€24 per tutti i mesi fino a Novembre + Dicembre €34,75)",
+				tipo: "proprietario",
+				categoria: "condominio",
+			},
+			
+			{
+				data: "09/01/2026",
+				importo: 11.00,
+				descrizione: "Rata assicurazione I semestre ui D/12",
+				tipo: "proprietario",
+				categoria: "assicurazione",
+			},
+			{
+				data: "09/01/2026",
+				importo: 12.42,
+				descrizione: "Rata assicurazione II semestre ui D/12",
+				tipo: "proprietario",
+				categoria: "assicurazione",
+			},
 		],
 		[]
 	)
