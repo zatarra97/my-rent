@@ -126,6 +126,13 @@ const Home: React.FC = () => {
 				descrizione: "Rata assicurazione II semestre ui D/12",
 				tipo: "proprietario",
 				categoria: "assicurazione",
+			},			
+			{
+				data: "16/01/2026",
+				importo: 106.03,
+				descrizione: "Novembre - Dicembre 2025",
+				tipo: "proprietario",
+				categoria: "energia",
 			},
 		],
 		[]
