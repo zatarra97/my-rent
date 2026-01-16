@@ -1,142 +1,25 @@
-import React, { useMemo } from "react"
+import React, { useMemo, useState } from "react"
 import Navbar from "../../Components/Navbar"
 import Chart from "react-apexcharts"
-
-interface Spesa {
-	data: string
-	importo: number
-	descrizione: string
-	tipo: "proprietario" | "affittuario"
-	categoria: "affitto" | "condominio" | "energia" | "gas" | "aqp" | "tari" | "assicurazione" | "varie"
-}
+import { Spesa } from "../../types/spesa"
+import { spese as speseData } from "../../data/spese"
 
 const Home: React.FC = () => {
 	// Dati delle spese
-	const spese: Spesa[] = useMemo(
-		() => [
-			{
-				data: "01/09/2025",
-				importo: 300.0,
-				descrizione: "",
-				tipo: "proprietario",
-				categoria: "affitto",
-			},
-			{
-				data: "19/09/2025",
-				importo: 92.0,
-				descrizione: "Tari (Settembre - Dicembre 2025)",
-				tipo: "proprietario",
-				categoria: "tari",
-			},
-			{
-				data: "01/10/2025",
-				importo: 300.0,
-				descrizione: "",
-				tipo: "proprietario",
-				categoria: "affitto",
-			},
-			{
-				data: "01/11/2025",
-				importo: 300.0,
-				descrizione: "",
-				tipo: "proprietario",
-				categoria: "affitto",
-			},
-			{
-				data: "10/11/2025",
-				importo: 109.7,
-				descrizione: "Settembre - Ottobre 2025",
-				tipo: "proprietario",
-				categoria: "energia",
-			},
-			{
-				data: "17/11/2025",
-				importo: 60.16,
-				descrizione: "Luglio - Settembre 2025",
-				tipo: "proprietario",
-				categoria: "gas",
-			},
-			{
-				data: "18/11/2025",
-				importo: 19.01,
-				descrizione: "6^ emissione 2025",
-				tipo: "proprietario",
-				categoria: "aqp",
-			},
-			{
-				data: "18/11/2025",
-				importo: 26.33,
-				descrizione: "Luglio - Settembre 2025 - €79,00 / 3 mesi",
-				tipo: "proprietario",
-				categoria: "condominio",
-			},
-			{
-				data: "18/11/2025",
-				importo: 79.27,
-				descrizione: "Ottobre - Dicembre 2025",
-				tipo: "proprietario",
-				categoria: "condominio",
-			},
-			{
-				data: "22/11/2025",
-				importo: 1286.47,
-				descrizione: "",
-				tipo: "affittuario",
-				categoria: "varie",
-			},
-			{
-				data: "01/12/2025",
-				importo: 300.0,
-				descrizione: "",
-				tipo: "proprietario",
-				categoria: "affitto",
-			},
-			{
-				data: "01/01/2026",
-				importo: 300.0,
-				descrizione: "",
-				tipo: "proprietario",
-				categoria: "affitto",
-			},
-			{
-				data: "05/01/2026",
-				importo: 600.0,
-				descrizione: "",
-				tipo: "affittuario",
-				categoria: "varie",
-			},
-			{
-				data: "09/01/2026",
-				importo: 298.75,
-				descrizione: "Gennaio - Dicembre 2026 (€24 per tutti i mesi fino a Novembre + Dicembre €34,75)",
-				tipo: "proprietario",
-				categoria: "condominio",
-			},
-			
-			{
-				data: "09/01/2026",
-				importo: 11.00,
-				descrizione: "Rata assicurazione I semestre ui D/12",
-				tipo: "proprietario",
-				categoria: "assicurazione",
-			},
-			{
-				data: "09/01/2026",
-				importo: 12.42,
-				descrizione: "Rata assicurazione II semestre ui D/12",
-				tipo: "proprietario",
-				categoria: "assicurazione",
-			},			
-			{
-				data: "16/01/2026",
-				importo: 106.03,
-				descrizione: "Novembre - Dicembre 2025",
-				tipo: "proprietario",
-				categoria: "energia",
-			},
-		],
-		[]
-	)
+	const spese: Spesa[] = speseData
+
+	// Estrai gli anni disponibili dalle spese
+	const anniDisponibili = useMemo(() => {
+		const anni = new Set<string>()
+		spese.forEach((spesa) => {
+			const anno = spesa.data.split("/")[2]
+			anni.add(anno)
+		})
+		return Array.from(anni).sort()
+	}, [spese])
+
+	// Stato per l'anno selezionato (default: tutti)
+	const [annoSelezionato, setAnnoSelezionato] = useState<string | null>(null)
 
 	// Calcolo del totale
 	const totale = useMemo(() => {
@@ -175,7 +58,7 @@ const Home: React.FC = () => {
 		return parseInt(anno) * 12 + parseInt(mese) - 1
 	}
 
-	// Raggruppa le spese per mese
+	// Raggruppa le spese per mese (sempre tutte le spese per i calcoli)
 	const spesePerMese = useMemo(() => {
 		const grouped: Record<
 			string,
@@ -317,6 +200,18 @@ const Home: React.FC = () => {
 	const totaleRighe = useMemo(() => {
 		return spesePerMese.reduce((acc, meseData) => acc + getTotaleMese(meseData), 0)
 	}, [spesePerMese, getTotaleMese])
+
+	// Filtra spesePerMese per anno selezionato (solo per visualizzazione, i calcoli rimangono totali)
+	const spesePerMeseFiltrate = useMemo(() => {
+		if (!annoSelezionato) {
+			return spesePerMese
+		}
+		return spesePerMese.filter((meseData) => {
+			// Estrai l'anno dal campo mese (formato "Mese Anno")
+			const annoMese = meseData.mese.split(" ")[1]
+			return annoMese === annoSelezionato
+		})
+	}, [spesePerMese, annoSelezionato])
 
 	// Formattazione importo in formato italiano
 	const formattaImporto = (importo: number): string => {
@@ -635,6 +530,34 @@ const Home: React.FC = () => {
 			{/* Tabella Spese */}
 			<section className="py-8 md:py-12">
 				<div className="container px-2 sm:px-6 lg:px-8">
+					{/* Selettore Anno */}
+					<div className="mb-4 flex flex-wrap items-center gap-3">
+						<label className="text-sm font-medium text-gray-700">Filtra per anno:</label>
+						<div className="flex flex-wrap gap-2">
+							<button
+								onClick={() => setAnnoSelezionato(null)}
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+									annoSelezionato === null ? "bg-primary text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer"
+								}`}
+							>
+								Tutti
+							</button>
+							{anniDisponibili.map((anno) => (
+								<button
+									key={anno}
+									onClick={() => setAnnoSelezionato(anno)}
+									className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+										annoSelezionato === anno
+											? "bg-primary text-white"
+											: "bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer"
+									}`}
+								>
+									{anno}
+								</button>
+							))}
+						</div>
+					</div>
+
 					<div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
 						{/* Tabella Desktop */}
 						<div className="hidden md:block overflow-x-auto">
@@ -655,7 +578,7 @@ const Home: React.FC = () => {
 									</tr>
 								</thead>
 								<tbody>
-									{spesePerMese.map((meseData, index) => (
+									{spesePerMeseFiltrate.map((meseData, index) => (
 										<tr key={index} className={`border-b border-gray-200 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
 											<td className="px-4 py-4 text-sm font-semibold text-gray-900 border-r border-gray-200">
 												{meseData.mese}
@@ -801,7 +724,7 @@ const Home: React.FC = () => {
 						{/* Vista Mobile */}
 						<div className="md:hidden">
 							<div className="divide-y divide-gray-200">
-								{spesePerMese.map((meseData, index) => (
+								{spesePerMeseFiltrate.map((meseData, index) => (
 									<div key={index} className="p-4">
 										<h3 className="text-base font-semibold text-gray-900 mb-3">{meseData.mese}</h3>
 										<div className="space-y-3">
