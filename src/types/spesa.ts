@@ -6,3 +6,6 @@ export interface Spesa {
 	categoria: "affitto" | "condominio" | "energia" | "gas" | "aqp" | "tari" | "assicurazione" | "varie"
 }
 
+
+
+

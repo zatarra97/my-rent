@@ -120,5 +120,15 @@ export const spese: Spesa[] = [
 		tipo: "proprietario",
 		categoria: "energia",
 	},
+	{
+		data: "21/01/2026",
+		importo: 36.36,
+		descrizione: "Prima Emissione 2026 ui D/12",
+		tipo: "proprietario",
+		categoria: "aqp",
+	},
 ]
+
+
+
 
