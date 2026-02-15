@@ -101,7 +101,7 @@ export const spese: Spesa[] = [
 	},
 	{
 		data: "09/01/2026",
-		importo: 11.00,
+		importo: 11.0,
 		descrizione: "Rata assicurazione I semestre ui D/12",
 		tipo: "proprietario",
 		categoria: "assicurazione",
@@ -133,9 +133,12 @@ export const spese: Spesa[] = [
 		descrizione: "",
 		tipo: "proprietario",
 		categoria: "affitto",
-	}
+	},
+	{
+		data: "15/02/2026",
+		importo: 764.56,
+		descrizione: "",
+		tipo: "affittuario",
+		categoria: "varie",
+	},
 ]
-
-
-
-
