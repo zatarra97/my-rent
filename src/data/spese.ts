@@ -140,5 +140,12 @@ export const spese: Spesa[] = [
 		descrizione: "",
 		tipo: "affittuario",
 		categoria: "varie",
+	},	
+	{
+		data: "16/02/2026",
+		importo: 128.25,
+		descrizione: "Ottobre - Dicembre 2025",
+		tipo: "proprietario",
+		categoria: "gas",
 	},
 ]
