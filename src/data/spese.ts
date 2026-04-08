@@ -163,7 +163,7 @@ export const spese: Spesa[] = [
 		categoria: "energia",
 	},
 	{
-		data: "20/03/2025",
+		data: "20/03/2026",
 		importo: 24.96,
 		descrizione: "Seconda emissione 2026 D/12",
 		tipo: "proprietario",
