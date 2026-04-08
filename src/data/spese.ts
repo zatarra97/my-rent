@@ -162,4 +162,18 @@ export const spese: Spesa[] = [
 		tipo: "proprietario",
 		categoria: "energia",
 	},
+	{
+		data: "20/03/2025",
+		importo: 24.96,
+		descrizione: "Seconda emissione 2026 D/12",
+		tipo: "proprietario",
+		categoria: "aqp",
+	},
+	{
+		data: "01/04/2026",
+		importo: 300.0,
+		descrizione: "",
+		tipo: "proprietario",
+		categoria: "affitto",
+	},
 ]
