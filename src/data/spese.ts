@@ -197,4 +197,11 @@ export const spese: Spesa[] = [
 		tipo: "proprietario",
 		categoria: "aqp",
 	},
+	{
+		data: "13/05/2026",
+		importo: 144.15,
+		descrizione: "Gennaio - Marzo 2026",
+		tipo: "proprietario",
+		categoria: "gas",
+	},
 ]
