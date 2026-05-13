@@ -189,5 +189,12 @@ export const spese: Spesa[] = [
 		descrizione: "",
 		tipo: "affittuario",
 		categoria: "varie",
+	},	
+	{
+		data: "13/05/2026",
+		importo: 15.16,
+		descrizione: "Terza Emissione 2026 ui D/12",
+		tipo: "proprietario",
+		categoria: "aqp",
 	},
 ]
