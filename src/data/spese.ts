@@ -210,5 +210,11 @@ export const spese: Spesa[] = [
 		descrizione: "Marzo - Aprile 2026",
 		tipo: "proprietario",
 		categoria: "energia",
+	},	{
+		data: "01/06/2026",
+		importo: 300.0,
+		descrizione: "",
+		tipo: "proprietario",
+		categoria: "affitto",
 	},
 ]
