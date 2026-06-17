@@ -189,7 +189,7 @@ export const spese: Spesa[] = [
 		descrizione: "",
 		tipo: "affittuario",
 		categoria: "varie",
-	},	
+	},
 	{
 		data: "13/05/2026",
 		importo: 15.16,
@@ -203,18 +203,27 @@ export const spese: Spesa[] = [
 		descrizione: "Gennaio - Marzo 2026",
 		tipo: "proprietario",
 		categoria: "gas",
-	},	
+	},
 	{
 		data: "15/05/2026",
 		importo: 103.35,
 		descrizione: "Marzo - Aprile 2026",
 		tipo: "proprietario",
 		categoria: "energia",
-	},	{
+	},
+	{
 		data: "01/06/2026",
 		importo: 300.0,
 		descrizione: "",
 		tipo: "proprietario",
 		categoria: "affitto",
+	},
+	{
+		data: "16/06/2026",
+		importo: 57.37,
+		descrizione:
+			"Conguaglio per anno 2025, calcolato parzialmente da Agosto a Dicembre 2025 - €137,68 / 12 mesi x i 5 mesi di permanenza = €57,37",
+		tipo: "proprietario",
+		categoria: "condominio",
 	},
 ]
