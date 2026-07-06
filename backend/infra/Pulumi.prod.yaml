@@ -1,0 +1,14 @@
+config:
+  aws:region: eu-north-1
+  aws:profile: personal
+  github:owner: zatarra97
+  myrent:dbHost: shared-db2ac789f.cny446ao40k7.eu-north-1.rds.amazonaws.com
+  myrent:dbPort: "3306"
+  myrent:dbUsername: admin
+  myrent:dbName: myrent
+  myrent:allowedOrigins: http://localhost:5173
+# Secret da impostare (generano encryptionsalt al primo set):
+#   pulumi -s prod config set --secret myrent:dbPassword <password-shared-db>
+#   pulumi -s prod config set --secret myrent:appPassword <password-app>
+# Dopo il primo deploy, aggiornare le origini CORS con l'URL CloudFront e ri-eseguire pulumi up:
+#   pulumi -s prod config set myrent:allowedOrigins "https://<id>.cloudfront.net,http://localhost:5173"

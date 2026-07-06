@@ -11,6 +11,7 @@
 **/build/
 **/bin/
 **/*.tgz
+**/lambda.zip
 **/lib-cov/ # Added: Directory for instrumented libs (e.g., jscoverage/JSCover)
 **/build/Release/ # Added: Compiled binary addons
 

@@ -1,0 +1,21 @@
+{
+  "name": "myrent-infra",
+  "version": "1.0.0",
+  "description": "Pulumi infrastructure for myRent",
+  "main": "index.ts",
+  "scripts": {
+    "auth": "aws sso login --profile=personal",
+    "up": "pulumi up",
+    "preview": "pulumi preview",
+    "destroy": "pulumi destroy"
+  },
+  "dependencies": {
+    "@pulumi/aws": "^6.0.0",
+    "@pulumi/github": "^6.0.0",
+    "@pulumi/pulumi": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.0",
+    "@types/node": "^20.0.0"
+  }
+}

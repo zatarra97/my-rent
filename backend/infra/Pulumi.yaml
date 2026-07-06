@@ -1,0 +1,6 @@
+name: myrent
+runtime:
+  name: nodejs
+  options:
+    typescript: true
+description: myRent — gestione spese affitto. Lambda + API Gateway + S3 (allegati privato + frontend) + CloudFront. DB su shared-db.
