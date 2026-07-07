@@ -4,6 +4,7 @@ import Chart from "react-apexcharts"
 import { Spesa, ETICHETTE_CATEGORIA } from "../../types/spesa"
 import { getSpese, deleteSpesa } from "../../services/api"
 import SpesaFormModal from "../../Components/SpesaFormModal"
+import IconaRicevuta from "../../Components/IconaRicevuta"
 
 // Converte una data ISO (YYYY-MM-DD) nel formato di visualizzazione DD/MM/YYYY
 const isoToDisplay = (iso: string): string => {
@@ -108,15 +109,15 @@ const Home: React.FC = () => {
 			string,
 			{
 				mese: string
-				affitto: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
-				condominio: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
-				energia: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
-				gas: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
-				aqp: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
-				tari: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
-				assicurazione: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
-				varie: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
-				rimborsi: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
+				affitto: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
+				condominio: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
+				energia: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
+				gas: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
+				aqp: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
+				tari: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
+				assicurazione: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
+				varie: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
+				rimborsi: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
 			}
 		> = {}
 
@@ -147,6 +148,7 @@ const Home: React.FC = () => {
 				data: spesa.data,
 				importo: spesa.importo,
 				descrizione: spesa.descrizione,
+				ricevutaUrl: spesa.ricevutaUrl,
 			}
 
 			if (spesa.categoria === "affitto") {
@@ -190,6 +192,7 @@ const Home: React.FC = () => {
 				data: rimborso.data,
 				importo: rimborso.importo,
 				descrizione: rimborso.descrizione,
+				ricevutaUrl: rimborso.ricevutaUrl,
 			})
 		})
 
@@ -486,13 +489,13 @@ const Home: React.FC = () => {
 	}, [chartData, statisticheMensili, formattaImporto])
 
 	// Funzione helper per renderizzare una cella con più spese
-	const renderCellaSpese = (speseArray: Array<{ publicId: string; data: string; importo: number; descrizione: string }>) => {
+	const renderCellaSpese = (speseArray: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>) => {
 		if (speseArray.length === 0) {
 			return <span className="text-gray-400">-</span>
 		}
 
 		// Raggruppa per data
-		const spesePerData: Record<string, Array<{ publicId: string; data: string; importo: number; descrizione: string }>> = {}
+		const spesePerData: Record<string, Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>> = {}
 		speseArray.forEach((spesa) => {
 			if (!spesePerData[spesa.data]) {
 				spesePerData[spesa.data] = []
@@ -515,11 +518,11 @@ const Home: React.FC = () => {
 								{(!tutteStessaData || idx === 0) && <div className="text-xs text-gray-500">{data}</div>}
 								<div className="font-medium text-red-600 space-y-0.5">
 									{speseData.length === 1 ? (
-										<span onClick={() => apriSpesaPerPublicId(speseData[0].publicId)} className="cursor-pointer hover:underline">+{formattaImporto(speseData[0].importo)}</span>
+										<><span onClick={() => apriSpesaPerPublicId(speseData[0].publicId)} className="cursor-pointer hover:underline">+{formattaImporto(speseData[0].importo)}</span><IconaRicevuta url={speseData[0].ricevutaUrl} /></>
 									) : (
 										speseData.map((spesa, i) => (
 											<div key={i} onClick={() => apriSpesaPerPublicId(spesa.publicId)} className="text-sm cursor-pointer hover:underline">
-												+{formattaImporto(spesa.importo)}
+												+{formattaImporto(spesa.importo)}<IconaRicevuta url={spesa.ricevutaUrl} />
 											</div>
 										))
 									)}
@@ -851,7 +854,7 @@ const Home: React.FC = () => {
 																			{spesa.descrizione && <p className="text-xs text-gray-600">{spesa.descrizione}</p>}
 																		</div>
 																		<p onClick={() => apriSpesaPerPublicId(spesa.publicId)} className="text-sm font-semibold text-red-600 ml-2 cursor-pointer hover:underline">
-																			+{formattaImporto(spesa.importo)}
+																			+{formattaImporto(spesa.importo)}<IconaRicevuta url={spesa.ricevutaUrl} />
 																		</p>
 																	</div>
 																))}
