@@ -64,6 +64,9 @@ const Home: React.FC = () => {
 	// Stato per l'anno selezionato (default: tutti)
 	const [annoSelezionato, setAnnoSelezionato] = useState<string | null>(null)
 
+	// Ricerca testuale nella descrizione (evidenzia in giallo, non filtra)
+	const [ricerca, setRicerca] = useState("")
+
 	// Calcolo del totale
 	const totale = useMemo(() => {
 		return spese.reduce((acc, spesa) => {
@@ -270,6 +273,12 @@ const Home: React.FC = () => {
 			minimumFractionDigits: 2,
 			maximumFractionDigits: 2,
 		}).format(importo)
+	}
+
+	// Classe di evidenziazione gialla per le voci la cui descrizione matcha la ricerca
+	const classeEvidenzia = (descrizione: string): string => {
+		const q = ricerca.trim().toLowerCase()
+		return q && descrizione.toLowerCase().includes(q) ? " bg-yellow-200 rounded px-1" : ""
 	}
 
 	// Calcolo statistiche mensili
@@ -518,10 +527,10 @@ const Home: React.FC = () => {
 								{(!tutteStessaData || idx === 0) && <div className="text-xs text-gray-500">{data}</div>}
 								<div className="font-medium text-red-600 space-y-0.5">
 									{speseData.length === 1 ? (
-										<><span onClick={() => apriSpesaPerPublicId(speseData[0].publicId)} className="cursor-pointer hover:underline">+{formattaImporto(speseData[0].importo)}</span><IconaRicevuta url={speseData[0].ricevutaUrl} /></>
+										<><span onClick={() => apriSpesaPerPublicId(speseData[0].publicId)} className={`cursor-pointer hover:underline${classeEvidenzia(speseData[0].descrizione)}`}>+{formattaImporto(speseData[0].importo)}</span><IconaRicevuta url={speseData[0].ricevutaUrl} /></>
 									) : (
 										speseData.map((spesa, i) => (
-											<div key={i} onClick={() => apriSpesaPerPublicId(spesa.publicId)} className="text-sm cursor-pointer hover:underline">
+											<div key={i} onClick={() => apriSpesaPerPublicId(spesa.publicId)} className={`text-sm cursor-pointer hover:underline${classeEvidenzia(spesa.descrizione)}`}>
 												+{formattaImporto(spesa.importo)}<IconaRicevuta url={spesa.ricevutaUrl} />
 											</div>
 										))
@@ -654,6 +663,25 @@ const Home: React.FC = () => {
 										</button>
 									))}
 								</div>
+								<div className="ml-auto flex items-center gap-2">
+									<input
+										type="text"
+										value={ricerca}
+										onChange={(e) => setRicerca(e.target.value)}
+										placeholder="Cerca nella descrizione…"
+										className="w-48 sm:w-64 px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary"
+									/>
+									{ricerca && (
+										<button
+											type="button"
+											onClick={() => setRicerca("")}
+											title="Cancella ricerca"
+											className="text-gray-400 hover:text-gray-600 cursor-pointer text-xl leading-none"
+										>
+											×
+										</button>
+									)}
+							</div>
 							</div>
 
 							<div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -720,7 +748,7 @@ const Home: React.FC = () => {
 																	<div key={rIndex} className="flex items-center justify-end gap-2">
 																		<div className="text-right">
 																			<div className="text-xs text-gray-500">{rimborso.data}</div>
-																			<div onClick={() => apriSpesaPerPublicId(rimborso.publicId)} className="font-medium text-green-600 cursor-pointer hover:underline">
+																			<div onClick={() => apriSpesaPerPublicId(rimborso.publicId)} className={`font-medium text-green-600 cursor-pointer hover:underline${classeEvidenzia(rimborso.descrizione)}`}>
 																				-{formattaImporto(rimborso.importo)}
 																			</div>
 																		</div>
@@ -853,7 +881,7 @@ const Home: React.FC = () => {
 																			</div>
 																			{spesa.descrizione && <p className="text-xs text-gray-600">{spesa.descrizione}</p>}
 																		</div>
-																		<p onClick={() => apriSpesaPerPublicId(spesa.publicId)} className="text-sm font-semibold text-red-600 ml-2 cursor-pointer hover:underline">
+																		<p onClick={() => apriSpesaPerPublicId(spesa.publicId)} className={`text-sm font-semibold text-red-600 ml-2 cursor-pointer hover:underline${classeEvidenzia(spesa.descrizione)}`}>
 																			+{formattaImporto(spesa.importo)}<IconaRicevuta url={spesa.ricevutaUrl} />
 																		</p>
 																	</div>
@@ -887,7 +915,7 @@ const Home: React.FC = () => {
 																			<p className="text-xs text-gray-600 mt-1">{rimborso.descrizione}</p>
 																		)}
 																	</div>
-																	<p onClick={() => apriSpesaPerPublicId(rimborso.publicId)} className="text-sm font-semibold text-green-600 ml-2 cursor-pointer hover:underline">
+																	<p onClick={() => apriSpesaPerPublicId(rimborso.publicId)} className={`text-sm font-semibold text-green-600 ml-2 cursor-pointer hover:underline${classeEvidenzia(rimborso.descrizione)}`}>
 																		-{formattaImporto(rimborso.importo)}
 																	</p>
 																</div>
