@@ -529,11 +529,11 @@ const Home: React.FC = () => {
 								{(!tutteStessaData || idx === 0) && <div className="text-xs text-gray-500">{data}</div>}
 								<div className="font-medium text-red-600 space-y-0.5">
 									{speseData.length === 1 ? (
-										<><span onClick={() => apriSpesaPerPublicId(speseData[0].publicId)} className={`cursor-pointer hover:underline${classeEvidenzia(speseData[0].descrizione)}`}>+{formattaImporto(speseData[0].importo)}</span><IconaAllegato url={speseData[0].ricevutaUrl} tipo="ricevuta" /><IconaAllegato url={speseData[0].cedolinoUrl} tipo="cedolino" /></>
+										<><span onClick={() => apriSpesaPerPublicId(speseData[0].publicId)} className={`cursor-pointer hover:underline${classeEvidenzia(speseData[0].descrizione)}`}>+{formattaImporto(speseData[0].importo)}</span><IconaAllegato url={speseData[0].cedolinoUrl} tipo="cedolino" /><IconaAllegato url={speseData[0].ricevutaUrl} tipo="ricevuta" /></>
 									) : (
 										speseData.map((spesa, i) => (
 											<div key={i} onClick={() => apriSpesaPerPublicId(spesa.publicId)} className={`text-sm cursor-pointer hover:underline${classeEvidenzia(spesa.descrizione)}`}>
-												+{formattaImporto(spesa.importo)}<IconaAllegato url={spesa.ricevutaUrl} tipo="ricevuta" /><IconaAllegato url={spesa.cedolinoUrl} tipo="cedolino" />
+												+{formattaImporto(spesa.importo)}<IconaAllegato url={spesa.cedolinoUrl} tipo="cedolino" /><IconaAllegato url={spesa.ricevutaUrl} tipo="ricevuta" />
 											</div>
 										))
 									)}
@@ -884,7 +884,7 @@ const Home: React.FC = () => {
 																			{spesa.descrizione && <p className="text-xs text-gray-600">{spesa.descrizione}</p>}
 																		</div>
 																		<p onClick={() => apriSpesaPerPublicId(spesa.publicId)} className={`text-sm font-semibold text-red-600 ml-2 cursor-pointer hover:underline${classeEvidenzia(spesa.descrizione)}`}>
-																			+{formattaImporto(spesa.importo)}<IconaAllegato url={spesa.ricevutaUrl} tipo="ricevuta" /><IconaAllegato url={spesa.cedolinoUrl} tipo="cedolino" />
+																			+{formattaImporto(spesa.importo)}<IconaAllegato url={spesa.cedolinoUrl} tipo="cedolino" /><IconaAllegato url={spesa.ricevutaUrl} tipo="ricevuta" />
 																		</p>
 																	</div>
 																))}
