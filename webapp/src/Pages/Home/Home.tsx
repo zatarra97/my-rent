@@ -106,15 +106,15 @@ const Home: React.FC = () => {
 			string,
 			{
 				mese: string
-				affitto: Array<{ data: string; importo: number; descrizione: string }>
-				condominio: Array<{ data: string; importo: number; descrizione: string }>
-				energia: Array<{ data: string; importo: number; descrizione: string }>
-				gas: Array<{ data: string; importo: number; descrizione: string }>
-				aqp: Array<{ data: string; importo: number; descrizione: string }>
-				tari: Array<{ data: string; importo: number; descrizione: string }>
-				assicurazione: Array<{ data: string; importo: number; descrizione: string }>
-				varie: Array<{ data: string; importo: number; descrizione: string }>
-				rimborsi: Array<{ data: string; importo: number; descrizione: string }>
+				affitto: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
+				condominio: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
+				energia: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
+				gas: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
+				aqp: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
+				tari: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
+				assicurazione: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
+				varie: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
+				rimborsi: Array<{ publicId: string; data: string; importo: number; descrizione: string }>
 			}
 		> = {}
 
@@ -141,6 +141,7 @@ const Home: React.FC = () => {
 			}
 
 			const entry = {
+				publicId: spesa.publicId,
 				data: spesa.data,
 				importo: spesa.importo,
 				descrizione: spesa.descrizione,
@@ -183,6 +184,7 @@ const Home: React.FC = () => {
 				}
 			}
 			grouped[meseKey].rimborsi.push({
+				publicId: rimborso.publicId,
 				data: rimborso.data,
 				importo: rimborso.importo,
 				descrizione: rimborso.descrizione,
@@ -482,13 +484,13 @@ const Home: React.FC = () => {
 	}, [chartData, statisticheMensili, formattaImporto])
 
 	// Funzione helper per renderizzare una cella con più spese
-	const renderCellaSpese = (speseArray: Array<{ data: string; importo: number; descrizione: string }>) => {
+	const renderCellaSpese = (speseArray: Array<{ publicId: string; data: string; importo: number; descrizione: string }>) => {
 		if (speseArray.length === 0) {
 			return <span className="text-gray-400">-</span>
 		}
 
 		// Raggruppa per data
-		const spesePerData: Record<string, Array<{ data: string; importo: number; descrizione: string }>> = {}
+		const spesePerData: Record<string, Array<{ publicId: string; data: string; importo: number; descrizione: string }>> = {}
 		speseArray.forEach((spesa) => {
 			if (!spesePerData[spesa.data]) {
 				spesePerData[spesa.data] = []
@@ -511,10 +513,10 @@ const Home: React.FC = () => {
 								{(!tutteStessaData || idx === 0) && <div className="text-xs text-gray-500">{data}</div>}
 								<div className="font-medium text-red-600 space-y-0.5">
 									{speseData.length === 1 ? (
-										<>+{formattaImporto(speseData[0].importo)}</>
+										<span onClick={() => apriSpesaPerPublicId(speseData[0].publicId)} className="cursor-pointer hover:underline">+{formattaImporto(speseData[0].importo)}</span>
 									) : (
 										speseData.map((spesa, i) => (
-											<div key={i} className="text-sm">
+											<div key={i} onClick={() => apriSpesaPerPublicId(spesa.publicId)} className="text-sm cursor-pointer hover:underline">
 												+{formattaImporto(spesa.importo)}
 											</div>
 										))
@@ -566,6 +568,15 @@ const Home: React.FC = () => {
 	const apriModificaSpesa = (spesa: Spesa) => {
 		setSpesaSelezionata(spesa)
 		setModaleAperta(true)
+	}
+
+	// Apre la modale di dettaglio/modifica a partire dal publicId (click sugli importi in tabella)
+	const apriSpesaPerPublicId = (publicId: string) => {
+		const spesa = speseRaw.find((s) => s.publicId === publicId)
+		if (spesa) {
+			setSpesaSelezionata(spesa)
+			setModaleAperta(true)
+		}
 	}
 
 	const eliminaSpesa = async (spesa: Spesa) => {
@@ -704,7 +715,7 @@ const Home: React.FC = () => {
 																	<div key={rIndex} className="flex items-center justify-end gap-2">
 																		<div className="text-right">
 																			<div className="text-xs text-gray-500">{rimborso.data}</div>
-																			<div className="font-medium text-green-600">
+																			<div onClick={() => apriSpesaPerPublicId(rimborso.publicId)} className="font-medium text-green-600 cursor-pointer hover:underline">
 																				-{formattaImporto(rimborso.importo)}
 																			</div>
 																		</div>
@@ -837,7 +848,7 @@ const Home: React.FC = () => {
 																			</div>
 																			{spesa.descrizione && <p className="text-xs text-gray-600">{spesa.descrizione}</p>}
 																		</div>
-																		<p className="text-sm font-semibold text-red-600 ml-2">
+																		<p onClick={() => apriSpesaPerPublicId(spesa.publicId)} className="text-sm font-semibold text-red-600 ml-2 cursor-pointer hover:underline">
 																			+{formattaImporto(spesa.importo)}
 																		</p>
 																	</div>
@@ -871,7 +882,7 @@ const Home: React.FC = () => {
 																			<p className="text-xs text-gray-600 mt-1">{rimborso.descrizione}</p>
 																		)}
 																	</div>
-																	<p className="text-sm font-semibold text-green-600 ml-2">
+																	<p onClick={() => apriSpesaPerPublicId(rimborso.publicId)} className="text-sm font-semibold text-green-600 ml-2 cursor-pointer hover:underline">
 																		-{formattaImporto(rimborso.importo)}
 																	</p>
 																</div>

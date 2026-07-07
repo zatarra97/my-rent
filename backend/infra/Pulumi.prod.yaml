@@ -6,9 +6,15 @@ config:
   myrent:dbPort: "3306"
   myrent:dbUsername: admin
   myrent:dbName: myrent
-  myrent:allowedOrigins: http://localhost:5173
+  myrent:allowedOrigins: https://d30ypazi7d5a09.cloudfront.net,http://localhost:5173
+  myrent:dbPassword:
+    secure: v1:gFG8p5LUijXlesmx:wqhiPWTZI+m+3I9cICwRtBuSpXUetftiq0Sbq3SMHYWVBkwJ8iDMKg==
+  myrent:appPassword:
+    secure: v1:AdT3VBc4GW/Tpqq6:gP+e+ZjT6DGYVdfq+ETtfVghTAWnTqn9ol0BPrwvH7o=
 # Secret da impostare (generano encryptionsalt al primo set):
 #   pulumi -s prod config set --secret myrent:dbPassword <password-shared-db>
 #   pulumi -s prod config set --secret myrent:appPassword <password-app>
 # Dopo il primo deploy, aggiornare le origini CORS con l'URL CloudFront e ri-eseguire pulumi up:
 #   pulumi -s prod config set myrent:allowedOrigins "https://<id>.cloudfront.net,http://localhost:5173"
+
+encryptionsalt: v1:+L6osDhQHNA=:v1:t0bDFEiwx4Nd9MJU:iAJ4R1oXSmaLGqtRDz9kTX0T9tgxtA==
