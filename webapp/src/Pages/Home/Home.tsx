@@ -67,6 +67,8 @@ const Home: React.FC = () => {
 	const totale = useMemo(() => {
 		return spese.reduce((acc, spesa) => {
 			if (spesa.tipo === "proprietario") {
+				// La categoria "varie" del proprietario non entra nel saldo
+				if (spesa.categoria === "varie") return acc
 				return acc + spesa.importo
 			} else {
 				return acc - spesa.importo
@@ -224,7 +226,7 @@ const Home: React.FC = () => {
 			totale += meseData.aqp.reduce((acc, s) => acc + s.importo, 0)
 			totale += meseData.tari.reduce((acc, s) => acc + s.importo, 0)
 			totale += meseData.assicurazione.reduce((acc, s) => acc + s.importo, 0)
-			totale += meseData.varie.reduce((acc, s) => acc + s.importo, 0)
+			// La categoria "varie" NON contribuisce al totale mensile (spese del proprietario non ribaltate sull'affittuario)
 
 			return totale
 		}
@@ -665,7 +667,7 @@ const Home: React.FC = () => {
 												<th className="px-4 py-4 text-right text-sm font-semibold border-r border-white/20">Aqp</th>
 												<th className="px-4 py-4 text-right text-sm font-semibold border-r border-white/20">Tari</th>
 												<th className="px-4 py-4 text-right text-sm font-semibold border-r border-white/20">Ass.</th>
-												<th className="px-4 py-4 text-right text-sm font-semibold border-r border-white/20">Varie</th>
+												<th className="px-4 py-4 text-right text-sm font-semibold border-r border-white/20">Varie (non fanno totale)</th>
 												<th className="px-4 py-4 text-right text-sm font-semibold border-r border-white/20">Totale</th>
 												<th className="px-4 py-4 text-right text-sm font-semibold">Rimborsi</th>
 											</tr>
