@@ -4,7 +4,7 @@ import Chart from "react-apexcharts"
 import { Spesa, ETICHETTE_CATEGORIA } from "../../types/spesa"
 import { getSpese, deleteSpesa } from "../../services/api"
 import SpesaFormModal from "../../Components/SpesaFormModal"
-import IconaRicevuta from "../../Components/IconaRicevuta"
+import IconaAllegato from "../../Components/IconaAllegato"
 
 // Converte una data ISO (YYYY-MM-DD) nel formato di visualizzazione DD/MM/YYYY
 const isoToDisplay = (iso: string): string => {
@@ -112,15 +112,15 @@ const Home: React.FC = () => {
 			string,
 			{
 				mese: string
-				affitto: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
-				condominio: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
-				energia: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
-				gas: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
-				aqp: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
-				tari: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
-				assicurazione: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
-				varie: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
-				rimborsi: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>
+				affitto: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null; cedolinoUrl: string | null }>
+				condominio: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null; cedolinoUrl: string | null }>
+				energia: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null; cedolinoUrl: string | null }>
+				gas: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null; cedolinoUrl: string | null }>
+				aqp: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null; cedolinoUrl: string | null }>
+				tari: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null; cedolinoUrl: string | null }>
+				assicurazione: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null; cedolinoUrl: string | null }>
+				varie: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null; cedolinoUrl: string | null }>
+				rimborsi: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null; cedolinoUrl: string | null }>
 			}
 		> = {}
 
@@ -152,6 +152,7 @@ const Home: React.FC = () => {
 				importo: spesa.importo,
 				descrizione: spesa.descrizione,
 				ricevutaUrl: spesa.ricevutaUrl,
+				cedolinoUrl: spesa.cedolinoUrl,
 			}
 
 			if (spesa.categoria === "affitto") {
@@ -196,6 +197,7 @@ const Home: React.FC = () => {
 				importo: rimborso.importo,
 				descrizione: rimborso.descrizione,
 				ricevutaUrl: rimborso.ricevutaUrl,
+				cedolinoUrl: rimborso.cedolinoUrl,
 			})
 		})
 
@@ -498,13 +500,13 @@ const Home: React.FC = () => {
 	}, [chartData, statisticheMensili, formattaImporto])
 
 	// Funzione helper per renderizzare una cella con più spese
-	const renderCellaSpese = (speseArray: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>) => {
+	const renderCellaSpese = (speseArray: Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null; cedolinoUrl: string | null }>) => {
 		if (speseArray.length === 0) {
 			return <span className="text-gray-400">-</span>
 		}
 
 		// Raggruppa per data
-		const spesePerData: Record<string, Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null }>> = {}
+		const spesePerData: Record<string, Array<{ publicId: string; data: string; importo: number; descrizione: string; ricevutaUrl: string | null; cedolinoUrl: string | null }>> = {}
 		speseArray.forEach((spesa) => {
 			if (!spesePerData[spesa.data]) {
 				spesePerData[spesa.data] = []
@@ -527,11 +529,11 @@ const Home: React.FC = () => {
 								{(!tutteStessaData || idx === 0) && <div className="text-xs text-gray-500">{data}</div>}
 								<div className="font-medium text-red-600 space-y-0.5">
 									{speseData.length === 1 ? (
-										<><span onClick={() => apriSpesaPerPublicId(speseData[0].publicId)} className={`cursor-pointer hover:underline${classeEvidenzia(speseData[0].descrizione)}`}>+{formattaImporto(speseData[0].importo)}</span><IconaRicevuta url={speseData[0].ricevutaUrl} /></>
+										<><span onClick={() => apriSpesaPerPublicId(speseData[0].publicId)} className={`cursor-pointer hover:underline${classeEvidenzia(speseData[0].descrizione)}`}>+{formattaImporto(speseData[0].importo)}</span><IconaAllegato url={speseData[0].ricevutaUrl} tipo="ricevuta" /><IconaAllegato url={speseData[0].cedolinoUrl} tipo="cedolino" /></>
 									) : (
 										speseData.map((spesa, i) => (
 											<div key={i} onClick={() => apriSpesaPerPublicId(spesa.publicId)} className={`text-sm cursor-pointer hover:underline${classeEvidenzia(spesa.descrizione)}`}>
-												+{formattaImporto(spesa.importo)}<IconaRicevuta url={spesa.ricevutaUrl} />
+												+{formattaImporto(spesa.importo)}<IconaAllegato url={spesa.ricevutaUrl} tipo="ricevuta" /><IconaAllegato url={spesa.cedolinoUrl} tipo="cedolino" />
 											</div>
 										))
 									)}
@@ -882,7 +884,7 @@ const Home: React.FC = () => {
 																			{spesa.descrizione && <p className="text-xs text-gray-600">{spesa.descrizione}</p>}
 																		</div>
 																		<p onClick={() => apriSpesaPerPublicId(spesa.publicId)} className={`text-sm font-semibold text-red-600 ml-2 cursor-pointer hover:underline${classeEvidenzia(spesa.descrizione)}`}>
-																			+{formattaImporto(spesa.importo)}<IconaRicevuta url={spesa.ricevutaUrl} />
+																			+{formattaImporto(spesa.importo)}<IconaAllegato url={spesa.ricevutaUrl} tipo="ricevuta" /><IconaAllegato url={spesa.cedolinoUrl} tipo="cedolino" />
 																		</p>
 																	</div>
 																))}

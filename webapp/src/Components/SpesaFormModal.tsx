@@ -191,18 +191,18 @@ const SpesaFormModal: React.FC<SpesaFormModalProps> = ({ spesa, onClose, onSaved
 					{isModifica ? (
 						<div className="space-y-3 pt-2 border-t border-gray-200">
 							<FileUploadInput
-								label="Ricevuta di pagamento (PDF)"
-								value={ricevutaKey}
-								onUpload={uploadAllegato("ricevuta", setRicevutaKey)}
-								onDownload={downloadAllegato("ricevuta")}
-								onRemove={removeAllegato("ricevuta", setRicevutaKey)}
-							/>
-							<FileUploadInput
 								label="Cedolino (PDF)"
 								value={cedolinoKey}
 								onUpload={uploadAllegato("cedolino", setCedolinoKey)}
 								onDownload={downloadAllegato("cedolino")}
 								onRemove={removeAllegato("cedolino", setCedolinoKey)}
+							/>
+							<FileUploadInput
+								label="Ricevuta di pagamento (PDF)"
+								value={ricevutaKey}
+								onUpload={uploadAllegato("ricevuta", setRicevutaKey)}
+								onDownload={downloadAllegato("ricevuta")}
+								onRemove={removeAllegato("ricevuta", setRicevutaKey)}
 							/>
 						</div>
 					) : (
