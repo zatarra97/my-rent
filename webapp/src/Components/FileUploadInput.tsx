@@ -146,7 +146,7 @@ const FileUploadInput: React.FC<FileUploadInputProps> = ({
 				{value ? (
 					<>
 						<IconFile />
-						<div className="flex-1" />
+						<span className="flex-1 min-w-0 text-sm text-gray-700 truncate">Documento.pdf</span>
 						<div className="flex items-center gap-1 shrink-0">
 							<button
 								type="button"
