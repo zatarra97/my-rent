@@ -10,12 +10,12 @@ interface FileUploadInputProps {
 	maxSizeMb?: number
 }
 
-const getFileLabel = (key: string | null): string => {
-	if (!key) return ""
-	return key.split("/").pop() || key
-}
-
 // --- Icone (SVG inline, nessuna dipendenza esterna) ---
+const IconFile = () => (
+	<svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+		<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V5a2 2 0 012-2h6l6 6v11a2 2 0 01-2 2z" />
+	</svg>
+)
 const IconDownload = () => (
 	<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 		<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" />
@@ -121,11 +121,6 @@ const FileUploadInput: React.FC<FileUploadInputProps> = ({
 		}
 	}
 
-	const handleReplace = (e: React.MouseEvent) => {
-		e.stopPropagation()
-		openPicker()
-	}
-
 	return (
 		<div>
 			<label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
@@ -150,9 +145,8 @@ const FileUploadInput: React.FC<FileUploadInputProps> = ({
 			>
 				{value ? (
 					<>
-						<span className="flex-1 min-w-0 text-sm text-gray-700 truncate" title={getFileLabel(value)}>
-							{getFileLabel(value)}
-						</span>
+						<IconFile />
+						<div className="flex-1" />
 						<div className="flex items-center gap-1 shrink-0">
 							<button
 								type="button"
@@ -166,23 +160,13 @@ const FileUploadInput: React.FC<FileUploadInputProps> = ({
 							</button>
 							<button
 								type="button"
-								onClick={handleReplace}
-								disabled={busy}
-								title="Sostituisci"
-								aria-label="Sostituisci"
-								className="p-1.5 rounded text-primary hover:bg-gray-100 disabled:text-gray-300 cursor-pointer disabled:cursor-not-allowed"
-							>
-								{isUploading ? <IconSpinner /> : <IconUpload />}
-							</button>
-							<button
-								type="button"
 								onClick={handleRemove}
 								disabled={busy}
 								title="Rimuovi"
 								aria-label="Rimuovi"
 								className="p-1.5 rounded text-red-600 hover:bg-red-50 disabled:text-gray-300 cursor-pointer disabled:cursor-not-allowed"
 							>
-								<IconTrash />
+								{isUploading ? <IconSpinner /> : <IconTrash />}
 							</button>
 						</div>
 					</>

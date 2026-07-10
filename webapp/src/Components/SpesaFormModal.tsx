@@ -100,11 +100,8 @@ const SpesaFormModal: React.FC<SpesaFormModalProps> = ({ spesa, onClose, onSaved
 	}
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-			<div
-				className="bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
-				onClick={(e) => e.stopPropagation()}
-			>
+		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+			<div className="bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
 				<div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
 					<h2 className="text-lg font-semibold text-gray-900">
 						{isModifica ? "Modifica spesa" : "Nuova spesa"}
@@ -217,7 +214,7 @@ const SpesaFormModal: React.FC<SpesaFormModalProps> = ({ spesa, onClose, onSaved
 						</div>
 					)}
 
-					<div className="flex justify-end gap-3 pt-2">
+					<div className="flex justify-between gap-3 pt-2">
 						<button
 							type="button"
 							onClick={onClose}
@@ -237,3 +234,4 @@ const SpesaFormModal: React.FC<SpesaFormModalProps> = ({ spesa, onClose, onSaved
 }
 
 export default SpesaFormModal
+
