@@ -181,7 +181,7 @@ const SpesaFormModal: React.FC<SpesaFormModalProps> = ({ spesa, onClose, onSaved
 						<textarea
 							value={descrizione}
 							onChange={(e) => setDescrizione(e.target.value)}
-							rows={2}
+							rows={5}
 							className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary"
 							placeholder="Opzionale"
 						/>
