@@ -64,7 +64,7 @@ const Home: React.FC = () => {
 	// Stato per l'anno selezionato (default: tutti)
 	const [annoSelezionato, setAnnoSelezionato] = useState<string | null>(null)
 
-	// Ricerca testuale nella descrizione (evidenzia in giallo, non filtra)
+	// Ricerca testuale nella descrizione (cerchia in rosso il match, non filtra)
 	const [ricerca, setRicerca] = useState("")
 
 	// Calcolo del totale
@@ -277,10 +277,10 @@ const Home: React.FC = () => {
 		}).format(importo)
 	}
 
-	// Classe di evidenziazione gialla per le voci la cui descrizione matcha la ricerca
+	// Classe di evidenziazione (cerchio rosso) per le voci la cui descrizione matcha la ricerca
 	const classeEvidenzia = (descrizione: string): string => {
 		const q = ricerca.trim().toLowerCase()
-		return q && descrizione.toLowerCase().includes(q) ? " bg-yellow-200 rounded px-1" : ""
+		return q && descrizione.toLowerCase().includes(q) ? " inline-block rounded-full px-2 py-0.5 ring-2 ring-red-400 bg-red-50 shadow-sm transition-all" : ""
 	}
 
 	// Calcolo statistiche mensili
@@ -385,7 +385,7 @@ const Home: React.FC = () => {
 								</div>
 								<div class="flex justify-between">
 									<span class="text-gray-400">Scostamento:</span>
-									<span class="${differenzaMedia >= 0 ? "text-red-400" : "text-green-400"}">
+									<span class="${differenzaMedia >= 0 ? "text-blue-400" : "text-green-400"}">
 										${differenzaMedia >= 0 ? "+" : ""}${formattaImporto(Math.abs(differenzaMedia))}
 										(${differenzaMedia >= 0 ? "+" : ""}${Math.abs(percentualeMedia).toFixed(1)}%)
 									</span>
@@ -527,13 +527,13 @@ const Home: React.FC = () => {
 						<div key={idx} className="flex items-center justify-end gap-2">
 							<div className="text-right">
 								{(!tutteStessaData || idx === 0) && <div className="text-xs text-gray-500">{data}</div>}
-								<div className="font-medium text-red-600 space-y-0.5">
+								<div className="font-medium text-blue-600 space-y-0.5">
 									{speseData.length === 1 ? (
-										<><span onClick={() => apriSpesaPerPublicId(speseData[0].publicId)} className={`cursor-pointer hover:underline${classeEvidenzia(speseData[0].descrizione)}`}>+{formattaImporto(speseData[0].importo)}</span><IconaAllegato url={speseData[0].cedolinoUrl} tipo="cedolino" /><IconaAllegato url={speseData[0].ricevutaUrl} tipo="ricevuta" /></>
+										<><span onClick={() => apriSpesaPerPublicId(speseData[0].publicId)} className={`cursor-pointer hover:underline${classeEvidenzia(speseData[0].descrizione)}`}>{formattaImporto(speseData[0].importo)}</span><IconaAllegato url={speseData[0].cedolinoUrl} tipo="cedolino" /><IconaAllegato url={speseData[0].ricevutaUrl} tipo="ricevuta" /></>
 									) : (
 										speseData.map((spesa, i) => (
 											<div key={i} onClick={() => apriSpesaPerPublicId(spesa.publicId)} className={`text-sm cursor-pointer hover:underline${classeEvidenzia(spesa.descrizione)}`}>
-												+{formattaImporto(spesa.importo)}<IconaAllegato url={spesa.cedolinoUrl} tipo="cedolino" /><IconaAllegato url={spesa.ricevutaUrl} tipo="ricevuta" />
+												{formattaImporto(spesa.importo)}<IconaAllegato url={spesa.cedolinoUrl} tipo="cedolino" /><IconaAllegato url={spesa.ricevutaUrl} tipo="ricevuta" />
 											</div>
 										))
 									)}
@@ -629,7 +629,7 @@ const Home: React.FC = () => {
 				<div className="container px-4 py-16 text-center text-gray-500">Caricamento spese…</div>
 			) : erroreCaricamento ? (
 				<div className="container px-4 py-16 text-center">
-					<p className="text-red-600 mb-4">{erroreCaricamento}</p>
+					<p className="text-blue-600 mb-4">{erroreCaricamento}</p>
 					<button onClick={caricaSpese} className="btn btn-secondary btn-small">
 						Riprova
 					</button>
@@ -737,8 +737,8 @@ const Home: React.FC = () => {
 													</td>
 													<td className="px-4 py-4 text-sm text-right border-r border-gray-200">
 														<div className="font-semibold">
-															<span className={getTotaleMese(meseData) >= 0 ? "text-red-600" : "text-green-600"}>
-																{getTotaleMese(meseData) >= 0 ? "+" : ""}
+															<span className={getTotaleMese(meseData) >= 0 ? "text-blue-600" : "text-green-600"}>
+																
 																{formattaImporto(Math.abs(getTotaleMese(meseData)))}
 															</span>
 														</div>
@@ -751,7 +751,7 @@ const Home: React.FC = () => {
 																		<div className="text-right">
 																			<div className="text-xs text-gray-500">{rimborso.data}</div>
 																			<div onClick={() => apriSpesaPerPublicId(rimborso.publicId)} className={`font-medium text-green-600 cursor-pointer hover:underline${classeEvidenzia(rimborso.descrizione)}`}>
-																				-{formattaImporto(rimborso.importo)}
+																				{formattaImporto(rimborso.importo)}
 																			</div>
 																		</div>
 																		{rimborso.descrizione && (
@@ -788,52 +788,52 @@ const Home: React.FC = () => {
 												<td className="px-4 py-4 text-sm font-semibold text-gray-900 border-r border-gray-300">TOTALE</td>
 												<td className="px-4 py-4 text-sm text-right font-semibold border-r border-gray-300">
 													{getImportoPerCategoria("affitto") !== 0 && (
-														<span className="text-red-600">{formattaImporto(getImportoPerCategoria("affitto"))}</span>
+														<span className="text-blue-600">{formattaImporto(getImportoPerCategoria("affitto"))}</span>
 													)}
 												</td>
 												<td className="px-4 py-4 text-sm text-right font-semibold border-r border-gray-300">
 													{getImportoPerCategoria("condominio") !== 0 && (
-														<span className="text-red-600">{formattaImporto(getImportoPerCategoria("condominio"))}</span>
+														<span className="text-blue-600">{formattaImporto(getImportoPerCategoria("condominio"))}</span>
 													)}
 												</td>
 												<td className="px-4 py-4 text-sm text-right font-semibold border-r border-gray-300">
 													{getImportoPerCategoria("energia") !== 0 && (
-														<span className="text-red-600">{formattaImporto(getImportoPerCategoria("energia"))}</span>
+														<span className="text-blue-600">{formattaImporto(getImportoPerCategoria("energia"))}</span>
 													)}
 												</td>
 												<td className="px-4 py-4 text-sm text-right font-semibold border-r border-gray-300">
 													{getImportoPerCategoria("gas") !== 0 && (
-														<span className="text-red-600">{formattaImporto(getImportoPerCategoria("gas"))}</span>
+														<span className="text-blue-600">{formattaImporto(getImportoPerCategoria("gas"))}</span>
 													)}
 												</td>
 												<td className="px-4 py-4 text-sm text-right font-semibold border-r border-gray-300">
 													{getImportoPerCategoria("aqp") !== 0 && (
-														<span className="text-red-600">{formattaImporto(getImportoPerCategoria("aqp"))}</span>
+														<span className="text-blue-600">{formattaImporto(getImportoPerCategoria("aqp"))}</span>
 													)}
 												</td>
 												<td className="px-4 py-4 text-sm text-right font-semibold border-r border-gray-300">
 													{getImportoPerCategoria("tari") !== 0 && (
-														<span className="text-red-600">{formattaImporto(getImportoPerCategoria("tari"))}</span>
+														<span className="text-blue-600">{formattaImporto(getImportoPerCategoria("tari"))}</span>
 													)}
 												</td>
 												<td className="px-4 py-4 text-sm text-right font-semibold border-r border-gray-300">
 													{getImportoPerCategoria("assicurazione") !== 0 && (
-														<span className="text-red-600">{formattaImporto(getImportoPerCategoria("assicurazione"))}</span>
+														<span className="text-blue-600">{formattaImporto(getImportoPerCategoria("assicurazione"))}</span>
 													)}
 												</td>
 												<td className="px-4 py-4 text-sm text-right font-semibold border-r border-gray-300">
 													{getImportoPerCategoria("varie") !== 0 && (
-														<span className="text-red-600">{formattaImporto(getImportoPerCategoria("varie"))}</span>
+														<span className="text-blue-600">{formattaImporto(getImportoPerCategoria("varie"))}</span>
 													)}
 												</td>
 												<td className="px-4 py-4 text-sm text-right font-semibold border-r border-gray-300">
-													<span className={totaleRighe >= 0 ? "text-red-600" : "text-green-600"}>
-														{totaleRighe >= 0 ? "+" : ""}
+													<span className={totaleRighe >= 0 ? "text-blue-600" : "text-green-600"}>
+														
 														{formattaImporto(Math.abs(totaleRighe))}
 													</span>
 												</td>
 												<td className="px-4 py-4 text-sm text-right font-semibold">
-													{totaleRimborsi !== 0 && <span className="text-green-600">-{formattaImporto(totaleRimborsi)}</span>}
+													{totaleRimborsi !== 0 && <span className="text-green-600">{formattaImporto(totaleRimborsi)}</span>}
 												</td>
 											</tr>
 											{/* Riga Saldo Finale */}
@@ -841,7 +841,7 @@ const Home: React.FC = () => {
 												<td colSpan={10} className="px-4 py-4 text-sm font-semibold text-gray-900 text-right">
 													SALDO FINALE
 												</td>
-												<td className={`px-4 py-4 text-right text-lg font-bold ${totale >= 0 ? "text-red-600" : "text-green-600"}`}>
+												<td className={`px-4 py-4 text-right text-lg font-bold ${totale >= 0 ? "text-blue-600" : "text-green-600"}`}>
 													{formattaImporto(Math.abs(totale))}
 												</td>
 											</tr>
@@ -883,8 +883,8 @@ const Home: React.FC = () => {
 																			</div>
 																			{spesa.descrizione && <p className="text-xs text-gray-600">{spesa.descrizione}</p>}
 																		</div>
-																		<p onClick={() => apriSpesaPerPublicId(spesa.publicId)} className={`text-sm font-semibold text-red-600 ml-2 cursor-pointer hover:underline${classeEvidenzia(spesa.descrizione)}`}>
-																			+{formattaImporto(spesa.importo)}<IconaAllegato url={spesa.cedolinoUrl} tipo="cedolino" /><IconaAllegato url={spesa.ricevutaUrl} tipo="ricevuta" />
+																		<p onClick={() => apriSpesaPerPublicId(spesa.publicId)} className={`text-sm font-semibold text-blue-600 ml-2 cursor-pointer hover:underline${classeEvidenzia(spesa.descrizione)}`}>
+																			{formattaImporto(spesa.importo)}<IconaAllegato url={spesa.cedolinoUrl} tipo="cedolino" /><IconaAllegato url={spesa.ricevutaUrl} tipo="ricevuta" />
 																		</p>
 																	</div>
 																))}
@@ -897,10 +897,10 @@ const Home: React.FC = () => {
 															<p className="text-sm font-semibold text-gray-900">Totale mese</p>
 															<p
 																className={`text-base font-bold ${
-																	getTotaleMese(meseData) >= 0 ? "text-red-600" : "text-green-600"
+																	getTotaleMese(meseData) >= 0 ? "text-blue-600" : "text-green-600"
 																}`}
 															>
-																{getTotaleMese(meseData) >= 0 ? "+" : ""}
+																
 																{formattaImporto(Math.abs(getTotaleMese(meseData)))}
 															</p>
 														</div>
@@ -918,7 +918,7 @@ const Home: React.FC = () => {
 																		)}
 																	</div>
 																	<p onClick={() => apriSpesaPerPublicId(rimborso.publicId)} className={`text-sm font-semibold text-green-600 ml-2 cursor-pointer hover:underline${classeEvidenzia(rimborso.descrizione)}`}>
-																		-{formattaImporto(rimborso.importo)}
+																		{formattaImporto(rimborso.importo)}
 																	</p>
 																</div>
 															))}
@@ -935,7 +935,7 @@ const Home: React.FC = () => {
 														<p className="text-sm font-semibold text-gray-900">TOTALE</p>
 														<p className="text-xs text-gray-600 mt-1">{totale >= 0 ? "Da riscuotere" : "Saldo positivo"}</p>
 													</div>
-													<p className={`text-lg font-bold ${totale >= 0 ? "text-red-600" : "text-green-600"}`}>
+													<p className={`text-lg font-bold ${totale >= 0 ? "text-blue-600" : "text-green-600"}`}>
 														{formattaImporto(Math.abs(totale))}
 													</p>
 												</div>
@@ -954,15 +954,15 @@ const Home: React.FC = () => {
 									</div>
 									<div className="text-right">
 										<div className="text-sm text-gray-500 mb-1">Media mensile</div>
-										<div className={`text-xl font-semibold ${statisticheMensili.media >= 0 ? "text-red-600" : "text-green-600"}`}>
-											{statisticheMensili.media >= 0 ? "+" : ""}
+										<div className={`text-xl font-semibold ${statisticheMensili.media >= 0 ? "text-blue-600" : "text-green-600"}`}>
+											
 											{formattaImporto(Math.abs(statisticheMensili.media))}
 										</div>
 										{statisticheMensili.trend && (
 											<div
 												className={`text-xs mt-1 flex items-center gap-1 justify-end ${
 													statisticheMensili.trend.direzione === "up"
-														? "text-red-600"
+														? "text-blue-600"
 														: statisticheMensili.trend.direzione === "down"
 														? "text-green-600"
 														: "text-gray-500"
@@ -1005,15 +1005,15 @@ const Home: React.FC = () => {
 									<div className="flex items-center gap-6 text-xs text-gray-600">
 										<div className="flex flex-col">
 											<span className="text-gray-500 mb-1">Minimo</span>
-											<span className={`font-semibold ${statisticheMensili.minimo >= 0 ? "text-red-600" : "text-green-600"}`}>
-												{statisticheMensili.minimo >= 0 ? "+" : ""}
+											<span className={`font-semibold ${statisticheMensili.minimo >= 0 ? "text-blue-600" : "text-green-600"}`}>
+												
 												{formattaImporto(Math.abs(statisticheMensili.minimo))}
 											</span>
 										</div>
 										<div className="flex flex-col">
 											<span className="text-gray-500 mb-1">Massimo</span>
-											<span className={`font-semibold ${statisticheMensili.massimo >= 0 ? "text-red-600" : "text-green-600"}`}>
-												{statisticheMensili.massimo >= 0 ? "+" : ""}
+											<span className={`font-semibold ${statisticheMensili.massimo >= 0 ? "text-blue-600" : "text-green-600"}`}>
+												
 												{formattaImporto(Math.abs(statisticheMensili.massimo))}
 											</span>
 										</div>
@@ -1069,7 +1069,7 @@ const Home: React.FC = () => {
 												</td>
 												<td
 													className={`px-4 py-3 text-right whitespace-nowrap font-medium ${
-														s.tipo === "proprietario" ? "text-red-600" : "text-green-600"
+														s.tipo === "proprietario" ? "text-blue-600" : "text-green-600"
 													}`}
 												>
 													{formattaImporto(s.importo)}
