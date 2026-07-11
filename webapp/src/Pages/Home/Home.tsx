@@ -12,6 +12,18 @@ const isoToDisplay = (iso: string): string => {
 	return `${d}/${m}/${y}`
 }
 
+// Marcatore nota stile commento Excel: triangolino blu in alto a destra della cella, tooltip in hover
+const NotaCella: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+	<div className="absolute top-0 right-0 group">
+		<svg className="w-4 h-4 text-blue-500 cursor-help" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
+			<polygon points="0,0 10,0 10,10" />
+		</svg>
+		<div className="absolute right-0 top-full mt-1 w-64 p-2 bg-gray-900 text-white text-xs font-normal text-left rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
+			{children}
+		</div>
+	</div>
+)
+
 const Home: React.FC = () => {
 	// --- Stato dati (dal backend) ---
 	const [speseRaw, setSpeseRaw] = useState<Spesa[]>([])
@@ -516,12 +528,13 @@ const Home: React.FC = () => {
 
 		const dateUniche = Object.keys(spesePerData)
 		const tutteStessaData = dateUniche.length === 1
+		const conDescrizione = speseArray.filter((s) => s.descrizione)
+		const descrizioniUniche = Array.from(new Set(conDescrizione.map((s) => s.descrizione)))
 
 		return (
 			<div className="space-y-1">
 				{dateUniche.map((data, idx) => {
 					const speseData = spesePerData[data]
-					const tutteStesseDescrizioni = speseData.length > 1 && speseData.every((s) => s.descrizione === speseData[0].descrizione)
 
 					return (
 						<div key={idx} className="flex items-center justify-end gap-2">
@@ -539,38 +552,24 @@ const Home: React.FC = () => {
 									)}
 								</div>
 							</div>
-							{speseData.some((s) => s.descrizione) && (
-								<div className="relative group">
-									<svg className="w-4 h-4 text-gray-400 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-										/>
-									</svg>
-									<div className="absolute right-0 bottom-full mb-2 w-64 p-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-										{tutteStesseDescrizioni ? (
-											speseData[0].descrizione
-										) : (
-											<div className="space-y-1">
-												{speseData.map((s, i) => (
-													<div key={i}>
-														{s.descrizione && (
-															<>
-																<span className="font-semibold">{s.data}:</span> {s.descrizione}
-															</>
-														)}
-													</div>
-												))}
-											</div>
-										)}
-									</div>
-								</div>
-							)}
 						</div>
 					)
 				})}
+				{conDescrizione.length > 0 && (
+					<NotaCella>
+						{descrizioniUniche.length === 1 ? (
+							descrizioniUniche[0]
+						) : (
+							<div className="space-y-1">
+								{conDescrizione.map((s, i) => (
+									<div key={i}>
+										<span className="font-semibold">{s.data}:</span> {s.descrizione}
+									</div>
+								))}
+							</div>
+						)}
+					</NotaCella>
+				)}
 			</div>
 		)
 	}
@@ -711,31 +710,31 @@ const Home: React.FC = () => {
 													<td className="px-4 py-4 text-sm font-semibold text-gray-900 border-r border-gray-200">
 														{meseData.mese}
 													</td>
-													<td className="px-4 py-4 text-sm text-right border-r border-gray-200">
+													<td className="relative px-4 py-4 text-sm text-right border-r border-gray-200">
 														{renderCellaSpese(meseData.affitto)}
 													</td>
-													<td className="px-4 py-4 text-sm text-right border-r border-gray-200">
+													<td className="relative px-4 py-4 text-sm text-right border-r border-gray-200">
 														{renderCellaSpese(meseData.condominio)}
 													</td>
-													<td className="px-4 py-4 text-sm text-right border-r border-gray-200">
+													<td className="relative px-4 py-4 text-sm text-right border-r border-gray-200">
 														{renderCellaSpese(meseData.energia)}
 													</td>
-													<td className="px-4 py-4 text-sm text-right border-r border-gray-200">
+													<td className="relative px-4 py-4 text-sm text-right border-r border-gray-200">
 														{renderCellaSpese(meseData.gas)}
 													</td>
-													<td className="px-4 py-4 text-sm text-right border-r border-gray-200">
+													<td className="relative px-4 py-4 text-sm text-right border-r border-gray-200">
 														{renderCellaSpese(meseData.aqp)}
 													</td>
-													<td className="px-4 py-4 text-sm text-right border-r border-gray-200">
+													<td className="relative px-4 py-4 text-sm text-right border-r border-gray-200">
 														{renderCellaSpese(meseData.tari)}
 													</td>
-													<td className="px-4 py-4 text-sm text-right border-r border-gray-200">
+													<td className="relative px-4 py-4 text-sm text-right border-r border-gray-200">
 														{renderCellaSpese(meseData.assicurazione)}
 													</td>
-													<td className="px-4 py-4 text-sm text-right border-r border-gray-200">
+													<td className="relative px-4 py-4 text-sm text-right border-r border-gray-200">
 														{renderCellaSpese(meseData.varie)}
 													</td>
-													<td className="px-4 py-4 text-sm text-right border-r border-gray-200">
+													<td className="relative px-4 py-4 text-sm text-right border-r border-gray-200">
 														<div className="font-semibold">
 															<span className={getTotaleMese(meseData) >= 0 ? "text-blue-600" : "text-green-600"}>
 																
@@ -743,40 +742,31 @@ const Home: React.FC = () => {
 															</span>
 														</div>
 													</td>
-													<td className="px-4 py-4 text-sm text-right">
+													<td className="relative px-4 py-4 text-sm text-right">
 														{meseData.rimborsi.length > 0 ? (
-															<div className="space-y-1">
-																{meseData.rimborsi.map((rimborso, rIndex) => (
-																	<div key={rIndex} className="flex items-center justify-end gap-2">
-																		<div className="text-right">
+															<>
+																<div className="space-y-1">
+																	{meseData.rimborsi.map((rimborso, rIndex) => (
+																		<div key={rIndex} className="text-right">
 																			<div className="text-xs text-gray-500">{rimborso.data}</div>
 																			<div onClick={() => apriSpesaPerPublicId(rimborso.publicId)} className={`font-medium text-green-600 cursor-pointer hover:underline${classeEvidenzia(rimborso.descrizione)}`}>
 																				{formattaImporto(rimborso.importo)}
 																			</div>
 																		</div>
-																		{rimborso.descrizione && (
-																			<div className="relative group">
-																				<svg
-																					className="w-4 h-4 text-gray-400 cursor-help"
-																					fill="none"
-																					stroke="currentColor"
-																					viewBox="0 0 24 24"
-																				>
-																					<path
-																						strokeLinecap="round"
-																						strokeLinejoin="round"
-																						strokeWidth={2}
-																						d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-																					/>
-																				</svg>
-																				<div className="absolute right-0 bottom-full mb-2 w-64 p-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-																					{rimborso.descrizione}
+																	))}
+																</div>
+																{meseData.rimborsi.some((r) => r.descrizione) && (
+																	<NotaCella>
+																		<div className="space-y-1">
+																			{meseData.rimborsi.filter((r) => r.descrizione).map((r, i) => (
+																				<div key={i}>
+																					<span className="font-semibold">{r.data}:</span> {r.descrizione}
 																				</div>
-																			</div>
-																		)}
-																	</div>
-																))}
-															</div>
+																			))}
+																		</div>
+																	</NotaCella>
+																)}
+															</>
 														) : (
 															<span className="text-gray-400">-</span>
 														)}
