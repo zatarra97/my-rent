@@ -279,6 +279,15 @@ const Home: React.FC = () => {
 		})
 	}, [spesePerMese, annoSelezionato])
 
+	// Numero di voci la cui descrizione corrisponde alla ricerca (nel filtro anno attivo)
+	const numRisultatiRicerca = useMemo(() => {
+		const q = ricerca.trim().toLowerCase()
+		if (!q) return 0
+		return spese.filter(
+			(s) => s.descrizione.toLowerCase().includes(q) && (!annoSelezionato || s.data.slice(-4) === annoSelezionato)
+		).length
+	}, [spese, ricerca, annoSelezionato])
+
 	// Formattazione importo in formato italiano
 	const formattaImporto = (importo: number): string => {
 		return new Intl.NumberFormat("it-IT", {
@@ -664,7 +673,8 @@ const Home: React.FC = () => {
 										</button>
 									))}
 								</div>
-								<div className="ml-auto flex items-center gap-2">
+								<div className="ml-auto flex flex-col items-end gap-1">
+									<div className="flex items-center gap-2">
 									<input
 										type="text"
 										value={ricerca}
@@ -681,6 +691,14 @@ const Home: React.FC = () => {
 										>
 											×
 										</button>
+									)}
+									</div>
+									{ricerca && (
+										<p className="text-xs text-gray-500">
+											{numRisultatiRicerca === 0
+												? "Nessun risultato trovato"
+												: `${numRisultatiRicerca} ${numRisultatiRicerca === 1 ? "risultato trovato" : "risultati trovati"}`}
+										</p>
 									)}
 							</div>
 							</div>
